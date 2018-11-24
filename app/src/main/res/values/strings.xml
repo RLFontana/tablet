@@ -9,4 +9,7 @@
     <string name="tv_pedido_pronto">Notificação</string>
     <string name="pedido_cozinha">O pedido de porção de batata frita com cheddar e bacon de Andreia está pronto para a entrega na mesa 2.</string>
     <string name="entregar">entregar</string>
+    <string name="title_activity_mesa">Mesa</string>
+    <string name="text_escolher_mesa">Escolha a mesa</string>
+    <string name="title_activity_cliente">Clientes</string>
 </resources>
