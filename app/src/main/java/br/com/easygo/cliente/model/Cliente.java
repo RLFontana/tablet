@@ -10,12 +10,18 @@ public class Cliente {
 
     private int codigo;
     private String nome;
-    private long telefone;
+    private String telefone;
     private Date dataNascimento;
     private String foto;
     private List<Comanda> listaComanda;
 
-    public Cliente(int codigo, String nome, long telefone, Date dataNascimento, String foto, List<Comanda> listaComanda) {
+    public Cliente(int codigo, String nome, String telefone) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.telefone = telefone;
+    }
+
+    public Cliente(int codigo, String nome, String telefone, Date dataNascimento, String foto, List<Comanda> listaComanda) {
         this.codigo = codigo;
         this.nome = nome;
         this.telefone = telefone;
@@ -24,7 +30,7 @@ public class Cliente {
         this.listaComanda = listaComanda;
     }
 
-    public Cliente(String nome, long telefone){
+    public Cliente(String nome, String telefone){
         this(0, nome, telefone, null, "", new ArrayList<Comanda>());
     }
 
@@ -44,11 +50,11 @@ public class Cliente {
         this.nome = nome;
     }
 
-    public long getTelefone() {
+    public String getTelefone() {
         return telefone;
     }
 
-    public void setTelefone(long telefone) {
+    public void setTelefone(String telefone) {
         this.telefone = telefone;
     }
 
@@ -81,7 +87,7 @@ public class Cliente {
         String retorno = "[Cliente]" + "\n" +
                 "codigo: " + codigo + "\n" +
                 "nome: " + nome + "\n" +
-                "telefone: " + Format.phoneNumber(telefone) + "\n" +
+                "telefone: " + telefone + "\n" +
                 "dataNascimento" + Format.date(dataNascimento) + "\n" +
                 "foto: " + foto + "\n" +
                 "[Lista]" + "\n";
@@ -92,4 +98,5 @@ public class Cliente {
         }
         return stringBuilder.toString();
     }
+
 }

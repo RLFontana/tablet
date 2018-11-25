@@ -1,10 +1,13 @@
 package br.com.easygo.cliente.model;
 
+import java.util.List;
+
 public class Garcom {
 
     private int codigo;
     private int matricula;
     private String nome;
+    private List<Solicitacao> solicitacoes;
 
     public Garcom(){
         this(0, 0, "");
@@ -38,6 +41,14 @@ public class Garcom {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public List<Solicitacao> getSolicitacoes() {
+        return solicitacoes;
+    }
+
+    public void setSolicitacoes(List<Solicitacao> solicitacoes) {
+        this.solicitacoes = solicitacoes;
     }
 
     @Override

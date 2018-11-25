@@ -1,6 +1,7 @@
 package br.com.easygo.cliente.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class Comanda {
     private Date dataFechamento;
     private Cliente cliente;
     private List<Pedido> listaPedido;
+    private Mesa mesaAtual;
 
     public Comanda(int codigo, int numero, Date dataAbertura, Date dataFechamento, Cliente cliente, List<Pedido> listaPedido) {
         this.codigo = codigo;
@@ -22,6 +24,14 @@ public class Comanda {
         this.dataFechamento = dataFechamento;
         this.cliente = cliente;
         this.listaPedido = listaPedido;
+    }
+
+
+    public Comanda(int codigo, int numero, Cliente cliente) {
+        this.codigo = codigo;
+        this.numero = numero;
+        this.dataAbertura = Calendar.getInstance().getTime();
+        this.cliente = cliente;
     }
 
     public Comanda(int numero, Cliente cliente){
@@ -91,5 +101,13 @@ public class Comanda {
             stringBuilder.append(pedido.toString());
         }
         return stringBuilder.toString();
+    }
+
+    public Mesa getMesaAtual() {
+        return mesaAtual;
+    }
+
+    public void setMesaAtual(Mesa mesaAtual) {
+        this.mesaAtual = mesaAtual;
     }
 }

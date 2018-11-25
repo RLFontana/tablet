@@ -1,11 +1,15 @@
 package br.com.easygo.cliente.model;
 
+import java.util.List;
+
 public class Mesa {
 
     private int codigo;
     private int numero;
     private int quantidadeCadeira;
     private SituacaoMesa situacao;
+    private List<Comanda> comandas;
+    private List<ItemPedido> itensPedidos;
 
     public Mesa(int codigo, int numero, int quantidadeCadeira, SituacaoMesa situacao) {
         this.codigo = codigo;
@@ -13,6 +17,8 @@ public class Mesa {
         this.quantidadeCadeira = quantidadeCadeira;
         this.situacao = situacao;
     }
+
+
 
     public Mesa(int numero, int quantidadeCadeira){
         this(0, numero, quantidadeCadeira, SituacaoMesa.DISPONIVEL);
@@ -57,5 +63,21 @@ public class Mesa {
                 "numero: " + numero + "\n" +
                 "quantidadeCadeira: " + quantidadeCadeira + "\n" +
                 "situacao: " + situacao + "\n";
+    }
+
+    public List<Comanda> getComandas() {
+        return comandas;
+    }
+
+    public void setComandas(List<Comanda> comandas) {
+        this.comandas = comandas;
+    }
+
+    public List<ItemPedido> getItensPedidos() {
+        return itensPedidos;
+    }
+
+    public void setItensPedidos(List<ItemPedido> itensPedidos) {
+        this.itensPedidos = itensPedidos;
     }
 }

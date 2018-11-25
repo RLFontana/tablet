@@ -13,10 +13,11 @@ import java.util.List;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.model.ItemPedido;
+import br.com.easygo.cliente.model.MainCardItem;
 
-public class PedidoAdapter extends ArrayAdapter<ItemPedido> {
+public class PedidoAdapter extends ArrayAdapter<MainCardItem> {
 
-    private List<ItemPedido> dataSet;
+    private List<MainCardItem> dataSet;
     Context context;
 
     private static class ViewHolder{
@@ -26,7 +27,7 @@ public class PedidoAdapter extends ArrayAdapter<ItemPedido> {
         ImageView cancelButton;
     }
 
-    public PedidoAdapter(Context context, ArrayList<ItemPedido> dataSet) {
+    public PedidoAdapter(Context context, ArrayList<MainCardItem> dataSet) {
         super(context, R.layout.row_pedido, dataSet);
         this.context = context;
         this.dataSet = dataSet;
@@ -36,7 +37,7 @@ public class PedidoAdapter extends ArrayAdapter<ItemPedido> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ItemPedido itemPedido = getItem(position);
+        MainCardItem itemPedido = getItem(position);
 
         ViewHolder viewHolder;
 
@@ -57,9 +58,9 @@ public class PedidoAdapter extends ArrayAdapter<ItemPedido> {
 
         lastPosition = position;
 
-        viewHolder.itemName.setText(itemPedido.getProduto().getNome());
-        viewHolder.itemQuantity.setText(String.valueOf(itemPedido.getQuantidade()));
-        viewHolder.cancelButton.setTag(position);
+        //viewHolder.itemName.setText(itemPedido.getProduto().getNome());
+        //viewHolder.itemQuantity.setText(String.valueOf(itemPedido.getQuantidade()));
+        //viewHolder.cancelButton.setTag(position);
 
         return convertView;
     }

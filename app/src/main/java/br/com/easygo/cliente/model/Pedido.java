@@ -13,21 +13,21 @@ public class Pedido {
     private Date dataInclusao;
     private Date dataConfirmacao;
     private Garcom garcom;
-    private Comanda comanda;
+    private Solicitacao solicitacao;
+    private List<Comanda> comandas;
     private List<ItemPedido> listaItemPedido;
 
-    public Pedido(int codigo, int numero, Date dataInclusao, Date dataConfirmacao, Garcom garcom, Comanda comanda, List<ItemPedido> listaItemPedido) {
+    public Pedido(int codigo, int numero, Date dataInclusao, Date dataConfirmacao, Garcom garcom, List<Comanda> comandas, List<ItemPedido> listaItemPedido) {
         this.codigo = codigo;
         this.numero = numero;
         this.dataInclusao = dataInclusao;
         this.dataConfirmacao = dataConfirmacao;
         this.garcom = garcom;
-        this.comanda = comanda;
         this.listaItemPedido = listaItemPedido;
     }
 
-    public Pedido(Garcom garcom, Comanda comanda, ItemPedido pedido){
-        this(0, 0, new Date(System.currentTimeMillis()), null, garcom, comanda, new ArrayList<ItemPedido>());
+    public Pedido(Garcom garcom, List<Comanda> comandas, ItemPedido pedido){
+        this(0, 0, new Date(System.currentTimeMillis()), null, garcom, comandas, new ArrayList<ItemPedido>());
         this.listaItemPedido.add(pedido);
     }
 
@@ -71,12 +71,20 @@ public class Pedido {
         this.garcom = garcom;
     }
 
-    public Comanda getComanda() {
-        return comanda;
+    public Solicitacao getSolicitacao() {
+        return solicitacao;
     }
 
-    public void setComanda(Comanda comanda) {
-        this.comanda = comanda;
+    public void setSolicitacao(Solicitacao solicitacao) {
+        this.solicitacao = solicitacao;
+    }
+
+    public List<Comanda> getComandas() {
+        return comandas;
+    }
+
+    public void setComandas(List<Comanda> comandas) {
+        this.comandas = comandas;
     }
 
     public List<ItemPedido> getListaItemPedido() {
@@ -95,7 +103,7 @@ public class Pedido {
                 "dataInclusao: " + Format.date(dataInclusao) + "\n" +
                 "dataConfirmacao: " + Format.date(dataConfirmacao) + "\n" +
                 garcom.toString() + "\n" +
-                comanda.toString() + "\n" +
+                //comanda.toString() + "\n" +
                 "[Lista]" + "\n";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(retorno);

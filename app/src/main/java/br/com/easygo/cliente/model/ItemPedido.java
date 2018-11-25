@@ -7,14 +7,14 @@ import br.com.easygo.cliente.util.Format;
 public class ItemPedido {
     private int codigo;
     private Produto produto;
-    private int quantidade;
+    private double quantidade;
     private SituacaoItemPedido situacao;
     private BigDecimal precoUnitario;
     private Garcom garcom;
     private Mesa mesa;
     private Pedido pedido;
 
-    public ItemPedido(int codigo, Produto produto, int quantidade, SituacaoItemPedido situacao, BigDecimal precoUnitario, Garcom garcom, Mesa mesa, Pedido pedido) {
+    public ItemPedido(int codigo, Produto produto, double quantidade, SituacaoItemPedido situacao, BigDecimal precoUnitario, Garcom garcom, Mesa mesa, Pedido pedido) {
         this.codigo = codigo;
         this.produto = produto;
         this.quantidade = quantidade;
@@ -45,7 +45,7 @@ public class ItemPedido {
         this.produto = produto;
     }
 
-    public int getQuantidade() {
+    public double getQuantidade() {
         return quantidade;
     }
 
