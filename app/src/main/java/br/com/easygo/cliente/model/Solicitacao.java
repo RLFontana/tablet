@@ -2,7 +2,7 @@ package br.com.easygo.cliente.model;
 
 import java.util.List;
 
-public class Solicitacao {
+public class Solicitacao{
 
     private int codigo;
     private Comanda comanda;
@@ -61,4 +61,6 @@ public class Solicitacao {
     public void setAtendida(boolean atendida) {
         this.atendida = atendida;
     }
+
+
 }

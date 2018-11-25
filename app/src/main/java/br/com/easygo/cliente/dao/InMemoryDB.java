@@ -35,18 +35,18 @@ public class InMemoryDB {
 
     private static void fillComandas() {
         comandaDAO = new ArrayList<>();
-        comandaDAO.add(new Comanda(0, 1,  clienteDAO.get(0)));
-        comandaDAO.add(new Comanda(1, 2,  clienteDAO.get(1)));
-        comandaDAO.add(new Comanda(2, 3,  clienteDAO.get(2)));
-        comandaDAO.add(new Comanda(3, 4,  clienteDAO.get(3)));
-        comandaDAO.add(new Comanda(4, 5,  clienteDAO.get(4)));
-        comandaDAO.add(new Comanda(5, 6,  clienteDAO.get(5)));
-        comandaDAO.add(new Comanda(6, 7,  clienteDAO.get(6)));
-        comandaDAO.add(new Comanda(7, 8,  clienteDAO.get(7)));
-        comandaDAO.add(new Comanda(8, 9,  clienteDAO.get(8)));
-        comandaDAO.add(new Comanda(9, 10,  clienteDAO.get(9)));
-        comandaDAO.add(new Comanda(10, 11,  clienteDAO.get(10)));
-        comandaDAO.add(new Comanda(11, 12,  clienteDAO.get(11)));
+        comandaDAO.add(new Comanda(0, 1,  clienteDAO.get(0), mesaDAO.get(0)));
+        comandaDAO.add(new Comanda(1, 2,  clienteDAO.get(1), mesaDAO.get(0)));
+        comandaDAO.add(new Comanda(2, 3,  clienteDAO.get(2), mesaDAO.get(0)));
+        comandaDAO.add(new Comanda(3, 4,  clienteDAO.get(3), mesaDAO.get(0)));
+        comandaDAO.add(new Comanda(4, 5,  clienteDAO.get(4), mesaDAO.get(1)));
+        comandaDAO.add(new Comanda(5, 6,  clienteDAO.get(5), mesaDAO.get(1)));
+        comandaDAO.add(new Comanda(6, 7,  clienteDAO.get(6), mesaDAO.get(2)));
+        comandaDAO.add(new Comanda(7, 8,  clienteDAO.get(7), mesaDAO.get(2)));
+        comandaDAO.add(new Comanda(8, 9,  clienteDAO.get(8), mesaDAO.get(2)));
+        comandaDAO.add(new Comanda(9, 10,  clienteDAO.get(9), mesaDAO.get(2)));
+        comandaDAO.add(new Comanda(10, 11,  clienteDAO.get(10), mesaDAO.get(3)));
+        comandaDAO.add(new Comanda(11, 12,  clienteDAO.get(11), mesaDAO.get(3)));
     }
 
     private static void fillSolicitacoes() {
@@ -99,12 +99,12 @@ public class InMemoryDB {
 
     private static void fillMesas() {
         mesaDAO = new ArrayList<>();
-        mesaDAO.add(new Mesa(0, 1, 4, SituacaoMesa.DISPONIVEL));
-        mesaDAO.add(new Mesa(1, 1, 4, SituacaoMesa.DISPONIVEL));
-        mesaDAO.add(new Mesa(2, 2, 4, SituacaoMesa.DISPONIVEL));
-        mesaDAO.add(new Mesa(3, 3, 4, SituacaoMesa.DISPONIVEL));
-        mesaDAO.add(new Mesa(4, 4, 4, SituacaoMesa.DISPONIVEL));
-        mesaDAO.add(new Mesa(5, 5, 4, SituacaoMesa.DISPONIVEL));
+        mesaDAO.add(new Mesa(0, 1, 4, SituacaoMesa.OCUPADA));
+        mesaDAO.add(new Mesa(1, 2, 4, SituacaoMesa.OCUPADA));
+        mesaDAO.add(new Mesa(2, 3, 4, SituacaoMesa.OCUPADA));
+        mesaDAO.add(new Mesa(3, 4, 4, SituacaoMesa.OCUPADA));
+        mesaDAO.add(new Mesa(4, 5, 4, SituacaoMesa.DISPONIVEL));
+        mesaDAO.add(new Mesa(5, 6, 4, SituacaoMesa.DISPONIVEL));
     }
 
     public static List<Solicitacao> solitacaoDAO;

@@ -3,7 +3,7 @@ package br.com.easygo.cliente.model;
 import android.view.View;
 
 
-public class MainCardAcao{
+public class MainCardAcao implements Cloneable{
     private int order;
     private String nome;
     private View.OnClickListener onClickListener;

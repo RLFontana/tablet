@@ -27,11 +27,12 @@ public class Comanda {
     }
 
 
-    public Comanda(int codigo, int numero, Cliente cliente) {
+    public Comanda(int codigo, int numero, Cliente cliente, Mesa mesaAtual) {
         this.codigo = codigo;
         this.numero = numero;
         this.dataAbertura = Calendar.getInstance().getTime();
         this.cliente = cliente;
+        this.mesaAtual = mesaAtual;
     }
 
     public Comanda(int numero, Cliente cliente){
