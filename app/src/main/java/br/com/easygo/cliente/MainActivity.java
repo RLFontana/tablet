@@ -1,6 +1,9 @@
 package br.com.easygo.cliente;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -19,6 +22,9 @@ import br.com.easygo.cliente.activities.MesaActivity;
 import br.com.easygo.cliente.adapters.PedidoAdapter;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
+import br.com.easygo.cliente.firebase.FireBaseData;
+import br.com.easygo.cliente.firebase.FirebaseReceiver;
+import br.com.easygo.cliente.firebase.OnReceiveNotification;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.Garcom;
@@ -38,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     List<MainCardItem> itemPedidos;
     private MainAdapter adapter;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +54,31 @@ public class MainActivity extends AppCompatActivity {
         SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
         solicitacaoDialog.setArguments(savedInstanceState);
         solicitacaoDialog.show(getSupportFragmentManager(), "tag");
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    FireBaseData value = (FireBaseData)intent.getSerializableExtra("Data");
+                    MainCardTipo tipo = MainCardTipo.SOLICITACAO_ATENDIMENTO;
+                    if (tipo == MainCardTipo.SOLICITACAO_ATENDIMENTO) {
+                        int codigoComanda = 1;
+                        InMemoryDB.insertSolicitacao(codigoComanda);
+                        refreshDataSet();
+                    }
+                    else if (tipo == MainCardTipo.ITEM_PEDIDO_ENTREGA){
+                        int codigoItemPedido = 1;
+                        InMemoryDB.insertItemPedidoPronto(codigoItemPedido);
+                        refreshDataSet();
+                    }
+                    refreshDataSet();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter());
 
         InMemoryDB.currentGarcom = InMemoryDB.garcomDAO.get(0);
 
@@ -75,6 +105,8 @@ public class MainActivity extends AppCompatActivity {
         adapter.setItens(itemPedidos);
         adapter.notifyDataSetChanged();
     }
+
+
 
     private void fillList() {
         itemPedidos = new ArrayList<>();

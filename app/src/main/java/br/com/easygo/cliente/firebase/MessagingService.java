@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import android.support.v4.content.LocalBroadcastManager;
 
 public class MessagingService extends FirebaseMessagingService {
     final String TAG = "MessagingService";
@@ -26,6 +27,11 @@ public class MessagingService extends FirebaseMessagingService {
         if(remoteMessage != null && remoteMessage.getData().containsKey("cardTipo")){
             FireBaseData firebaseData = FireBaseData.parse(remoteMessage.getData());
 
+            LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
+
+            Intent intent = new Intent();
+            intent.putExtra("Data", firebaseData);
+            broadcaster.sendBroadcast(intent);
         }
     }
 }
