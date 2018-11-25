@@ -19,11 +19,11 @@ public enum MainCardTipo {
 
     public static MainCardTipo valueOf(int tipo){
         switch (tipo){
-            case 1:
+            case 0:
                 return SOLICITACAO_ATENDIMENTO;
-            case 2:
+            case 1:
                 return PEDIDO_CLIENTE;
-            case 3:
+            case 2:
                 return ITEM_PEDIDO_CONFIRMADO;
             default:
                 return ITEM_PEDIDO_ENTREGA;

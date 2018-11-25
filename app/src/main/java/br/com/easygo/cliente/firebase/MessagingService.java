@@ -1,5 +1,6 @@
 package br.com.easygo.cliente.firebase;
 
+import android.content.Intent;
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -20,6 +21,12 @@ public class MessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+
         Log.d(TAG, "ID: " + remoteMessage.getCollapseKey());
+        if(remoteMessage != null && remoteMessage.getData().containsKey("cardTipo")){
+            //Intent intent = new Intent(this, UpdateCheckService.class);
+            //intent.putExtra("FireBaseData", remoteMessage.getD);
+            //startService(intent);
+        }
     }
 }
