@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
 import br.com.easygo.cliente.firebase.FireBaseData;
 import br.com.easygo.cliente.firebase.FirebaseReceiver;
+import br.com.easygo.cliente.firebase.MessagingService;
 import br.com.easygo.cliente.firebase.OnReceiveNotification;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
@@ -98,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false));
         adapter = new MainAdapter(this, itemPedidos);
         recyclerView.setAdapter(adapter);
+        FirebaseMessaging.getInstance().subscribeToTopic("tablet");
     }
 
     public void refreshDataSet(){
