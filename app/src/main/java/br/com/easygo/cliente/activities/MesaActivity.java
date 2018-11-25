@@ -1,5 +1,6 @@
 package br.com.easygo.cliente.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -14,8 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.easygo.cliente.R;
+import br.com.easygo.cliente.adapters.ClienteAdapter;
 import br.com.easygo.cliente.adapters.MesaAdapter;
+import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 import br.com.easygo.cliente.adapters.objects.MesaAdapterObject;
+import br.com.easygo.cliente.dao.InMemoryDB;
+import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.SituacaoMesa;
 
@@ -41,17 +46,22 @@ public class MesaActivity extends AppCompatActivity {
         fab.setVisibility(View.GONE);
 
         ArrayList<MesaAdapterObject> mesasArray = new ArrayList<>();
-        mesasArray.add(new MesaAdapterObject(new Mesa(0, 1, 4, SituacaoMesa.INDISPONIVEL)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(2, 4)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(3, 4)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(4, 4)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(5, 4)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(0, 6, 4, SituacaoMesa.INDISPONIVEL)));
-        mesasArray.add(new MesaAdapterObject(new Mesa(7, 4)));
+        for(Mesa mesa : InMemoryDB.mesaDAO){
+            mesasArray.add(new MesaAdapterObject(mesa));
+        }
+
+        MesaAdapter.OnItemClickListener onClick = new MesaAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(MesaAdapterObject item) {
+                Intent it = new Intent(MesaActivity.this, ClienteActivity.class);
+                it.putExtra("MESA_ID", String.valueOf(item.getMesa().getCodigo()));
+                startActivity(it);
+            }
+        };
 
         RecyclerView recyclerView = findViewById(R.id.rv_mesas);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
-        MesaAdapter adapter = new MesaAdapter(this, mesasArray);
+        MesaAdapter adapter = new MesaAdapter(this, mesasArray, onClick);
         recyclerView.setAdapter(adapter);
     }
 

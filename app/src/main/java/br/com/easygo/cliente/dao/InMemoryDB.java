@@ -83,18 +83,18 @@ public class InMemoryDB {
 
     private static void fillClientes() {
         clienteDAO = new ArrayList<>();
-        clienteDAO.add(new Cliente(0, "Rafaela","99999-9900" ));
-        clienteDAO.add(new Cliente(1, "Guthierry","99999-9901" ));
-        clienteDAO.add(new Cliente(2, "Vinícius","99999-9902" ));
-        clienteDAO.add(new Cliente(3, "Luiza","99999-9903" ));
-        clienteDAO.add(new Cliente(4, "Denise","99999-9904" ));
-        clienteDAO.add(new Cliente(5, "Shayana","99999-9905" ));
-        clienteDAO.add(new Cliente(6, "Enzo","99999-9906" ));
-        clienteDAO.add(new Cliente(7, "Valentina","99999-9907" ));
-        clienteDAO.add(new Cliente(8, "Vicente","99999-9908" ));
-        clienteDAO.add(new Cliente(9, "Liliane","99999-9909" ));
-        clienteDAO.add(new Cliente(10, "Jocival","99999-9910" ));
-        clienteDAO.add(new Cliente(11, "Aroldo","99999-9911" ));
+        clienteDAO.add(new Cliente(0, "Rafaela","99999-9900", "woman_1" ));
+        clienteDAO.add(new Cliente(1, "Guthierry","99999-9901", "man_1" ));
+        clienteDAO.add(new Cliente(2, "Vinícius","99999-9902", "man_2" ));
+        clienteDAO.add(new Cliente(3, "Luiza","99999-9903", "woman_2" ));
+        clienteDAO.add(new Cliente(4, "Denise","99999-9904", "woman_3" ));
+        clienteDAO.add(new Cliente(5, "Shayana","99999-9905", "woman_4" ));
+        clienteDAO.add(new Cliente(6, "Enzo","99999-9906", "man_3" ));
+        clienteDAO.add(new Cliente(7, "Valentina","99999-9907" , "woman_5"));
+        clienteDAO.add(new Cliente(8, "Vicente","99999-9908", "man_4" ));
+        clienteDAO.add(new Cliente(9, "Liliane","99999-9909", "woman_6" ));
+        clienteDAO.add(new Cliente(10, "Jocival","99999-9910", "man_5" ));
+        clienteDAO.add(new Cliente(11, "Aroldo","99999-9911", "man_6" ));
     }
 
     private static void fillMesas() {
