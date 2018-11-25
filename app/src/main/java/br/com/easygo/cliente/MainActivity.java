@@ -71,9 +71,6 @@ public class MainActivity extends AppCompatActivity {
         itemPedidos = new ArrayList<>();
 
         //SOLICITACAO DE ATENDIMENTO
-        List<MainCardAcao> acoesSolicitacao = new ArrayList<>();
-        acoesSolicitacao.add(new MainCardAcao(0, "Atender"));
-        acoesSolicitacao.add(new MainCardAcao(1, "Cancelar"));
 
         for (Solicitacao solicitacao: InMemoryDB.solitacaoDAO) {
             if(solicitacao.getGarcom().getCodigo() == currentGarcom.getCodigo()
@@ -81,8 +78,11 @@ public class MainActivity extends AppCompatActivity {
                 Cliente c = solicitacao.getComanda().getCliente();
                 Mesa m =  solicitacao.getComanda().getMesaAtual();
 
-                acoesSolicitacao.get(0).setOnClickListener(atenderSolicitacao_onClick(solicitacao));
-                acoesSolicitacao.get(1).setOnClickListener(cancelarSolicitacao_onClick(solicitacao));
+
+                List<MainCardAcao> acoesSolicitacao = new ArrayList<>();
+                acoesSolicitacao.add(new MainCardAcao(0, "Atender", atenderSolicitacao_onClick(solicitacao)));
+                acoesSolicitacao.add(new MainCardAcao(1, "Cancelar", cancelarSolicitacao_onClick(solicitacao)));
+
                 itemPedidos.add(new MainCardItem(
                         "Mesa "+ m.getCodigo(),
                         c.getNome(),
@@ -97,13 +97,7 @@ public class MainActivity extends AppCompatActivity {
         //PEDIDO DO CLIENTE
         //FIM PEDIDO DO CLIENTE
 
-        List<MainCardAcao> acoesEntrega = new ArrayList<>();
-        acoesEntrega.add(new MainCardAcao(0, "Entregar", entregarItem_onClick()));
-        acoesEntrega.add(new MainCardAcao(1, "Cancelar", cancelarEntregaItem_onClick()));
 
-
-        List<MainCardAcao> acoesPedido = new ArrayList<>();
-        acoesPedido.add(new MainCardAcao(0, "Cancelar pedido", entregarItem_onClick()));
 
         for (ItemPedido itemPedido : InMemoryDB.itemPedidoDAO){
 
@@ -116,6 +110,31 @@ public class MainActivity extends AppCompatActivity {
                 for(Comanda comanda : comandas){
                     nomeCliente += comanda.getCliente().getNome();
                 }
+
+
+                List<MainCardAcao> acoesEntrega = new ArrayList<>();
+                acoesEntrega.add(new MainCardAcao(0, "Entregar", entregarItem_onClick(itemPedido)));
+                acoesEntrega.add(new MainCardAcao(1, "Cancelar", cancelarEntregaItem_onClick(itemPedido)));
+                itemPedidos.add(new MainCardItem(
+                        "Mesa "+ itemPedido.getMesa().getCodigo(),
+                        nomeCliente,
+                        itemPedido.getProduto().getNome(),
+                        MainCardTipo.ITEM_PEDIDO_ENTREGA,
+                        acoesEntrega
+                ));
+            }
+            //FIM ITENS A ENTREGAR
+
+
+            //ITENS PEDIDOS PELO GARCOM ATUAL
+            if (itemPedido.getSituacao() == SituacaoItemPedido.CONFIRMADO_PELO_GARCOM &&
+                    itemPedido.getPedido().getGarcom().getCodigo() == currentGarcom.getCodigo()){
+                List<Comanda> comandas = itemPedido.getPedido().getComandas();
+                String nomeCliente = "";
+                for(Comanda comanda : comandas){
+                    nomeCliente += comanda.getCliente().getNome();
+                }
+
 
                 String titulo = "";
                 switch (itemPedido.getProduto().getTipo()){
@@ -134,27 +153,10 @@ public class MainActivity extends AppCompatActivity {
                         titulo = "Bar";
                         break;
                 }
+                List<MainCardAcao> acoesPedido = new ArrayList<>();
+                acoesPedido.add(new MainCardAcao(0, "Cancelar pedido", cancelarPedido_onClick(itemPedido)));
                 itemPedidos.add(new MainCardItem(
                         titulo,
-                        nomeCliente,
-                        itemPedido.getProduto().getNome(),
-                        MainCardTipo.ITEM_PEDIDO_ENTREGA,
-                        acoesEntrega
-                ));
-            }
-            //FIM ITENS A ENTREGAR
-
-
-            //ITENS PEDIDOS PELO GARCOM ATUAL
-            if (itemPedido.getSituacao() == SituacaoItemPedido.CONFIRMADO_PELO_GARCOM &&
-                    itemPedido.getPedido().getGarcom().getCodigo() == currentGarcom.getCodigo()){
-                List<Comanda> comandas = itemPedido.getPedido().getComandas();
-                String nomeCliente = "";
-                for(Comanda comanda : comandas){
-                    nomeCliente += comanda.getCliente().getNome();
-                }
-                itemPedidos.add(new MainCardItem(
-                        "Mesa "+ itemPedido.getMesa().getCodigo(),
                         nomeCliente,
                         itemPedido.getProduto().getNome(),
                         MainCardTipo.ITEM_PEDIDO_ENTREGA,
@@ -167,20 +169,32 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private View.OnClickListener cancelarEntregaItem_onClick() {
+    private View.OnClickListener cancelarPedido_onClick(final ItemPedido itemPedido) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
+                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.CANCELADO);
             }
         };
     }
 
-    private View.OnClickListener entregarItem_onClick() {
+    private View.OnClickListener cancelarEntregaItem_onClick(final ItemPedido itemPedido) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
+                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.CANCELADO);
+            }
+        };
+    }
 
+    private View.OnClickListener entregarItem_onClick(final ItemPedido itemPedido) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
+                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.ENTREGUE);
             }
         };
     }
@@ -199,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int index = InMemoryDB.solitacaoDAO.indexOf(solicitacao);
+                InMemoryDB.solitacaoDAO.get(index).setAtendida(true);
                 Pedido pedido = new Pedido(0, InMemoryDB.pedidoDAO.size(), currentGarcom);
                 InMemoryDB.pedidoDAO.add(pedido);
             }

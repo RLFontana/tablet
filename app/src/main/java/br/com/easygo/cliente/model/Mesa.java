@@ -87,7 +87,8 @@ public class Mesa {
     public List<Cliente> getClientes(){
         List<Cliente> clientes = new ArrayList<>();
         for (Comanda comanda : InMemoryDB.comandaDAO){
-            clientes.add(comanda.getCliente());
+            if (comanda.getMesaAtual().getCodigo() == this.codigo)
+                clientes.add(comanda.getCliente());
         }
         return clientes;
     }
