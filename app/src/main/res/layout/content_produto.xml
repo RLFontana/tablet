@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".activities.ProdutoActivity"
+    tools:showIn="@layout/activity_produto">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/rightLayout"
+            android:layout_width="200dip"
+            android:layout_height="fill_parent"
+            android:layout_alignParentRight="true">
+
+            <LinearLayout
+                android:id="@+id/topInnerLayout"
+                android:layout_width="250dip"
+                android:layout_height="fill_parent"
+                android:orientation="vertical" >
+            </LinearLayout>
+
+        </RelativeLayout>
+
+
+
+
+        <LinearLayout
+            android:id="@+id/topLayout"
+            android:layout_toLeftOf="@id/rightLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:orientation="vertical" >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_produtos"
+                android:padding="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+</android.support.constraint.ConstraintLayout>

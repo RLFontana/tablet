@@ -120,6 +120,14 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
         return clientes == null ? null : clientes.get(position);
     }
 
+    public int[] getSelecionados(){
+        int[] selecionados = new int[selectedItems.size()];
+        for(int i=0; i< selectedItems.size(); i++){
+            selecionados[i] = selectedItems.get(i).intValue();
+        }
+        return selecionados;
+    }
+
     static class MesaViewHolder extends RecyclerView.ViewHolder {
         TextView clienteName;
         CardView clienteCard;

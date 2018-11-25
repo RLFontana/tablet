@@ -1,6 +1,7 @@
 package br.com.easygo.cliente.activities;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import br.com.easygo.cliente.R;
@@ -24,25 +26,32 @@ import br.com.easygo.cliente.model.Mesa;
 
 public class ClienteActivity extends AppCompatActivity {
 
+    ClienteAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent it = getIntent();
+        final int mesaID = it.getIntExtra("MESA_ID", -1);
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_cliente);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent it = new Intent(ClienteActivity.this, ProdutoActivity.class);
+                it.putExtra("MESA_ID", mesaID);
+                it.putExtra("CLIENTE_ID", adapter.getSelecionados());
+                startActivity(it);
+
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                //        .setAction("Action", null).show();
             }
         });
         fab.setVisibility(View.GONE);
-
-        Intent it = getIntent();
-        int mesaID = it.getIntExtra("MESA_ID", -1);
 
         Mesa mesa = null;
         if(mesaID > -1 && !"".equals(mesaID)){
@@ -58,7 +67,20 @@ public class ClienteActivity extends AppCompatActivity {
         textMesa.setText(String.valueOf(mesa.getNumero())) ;
 
         ArrayList<ClienteAdapterObject> clientesArray = new ArrayList<>();
-        for(Cliente cliente : mesa.getClientes()){
+        List<Cliente> clientes = mesa.getClientes();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            clientes.sort(new Comparator<Cliente>() {
+                @Override
+                public int compare(Cliente cliente, Cliente t1) {
+                    String clienteName1 = cliente.getNome().toUpperCase();
+                    String clienteName2 = t1.getNome().toUpperCase();
+                    return clienteName1.compareTo(clienteName2);
+                }
+            });
+        }
+
+        for(Cliente cliente : clientes){
             clientesArray.add(new ClienteAdapterObject(cliente));
         }
 
@@ -82,7 +104,7 @@ public class ClienteActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.rv_clientes);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 4, LinearLayoutManager.VERTICAL, false));
-        ClienteAdapter adapter = new ClienteAdapter(this, clientesArray, onClick);
+        adapter = new ClienteAdapter(this, clientesArray, onClick);
         recyclerView.setAdapter(adapter);
 
 

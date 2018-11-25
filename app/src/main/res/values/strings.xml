@@ -12,4 +12,5 @@
     <string name="title_activity_mesa">Mesa</string>
     <string name="text_escolher_mesa">Escolha a mesa</string>
     <string name="title_activity_cliente">Clientes</string>
+    <string name="title_activity_produto">Produtos</string>
 </resources>
