@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import br.com.easygo.cliente.R;
@@ -20,7 +21,7 @@ import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 public class ClienteAdapter  extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(ClienteAdapterObject item);
+        void onItemClick(ClienteAdapterObject item, List<Integer> selectedItems);
     }
 
     private final OnItemClickListener listener;
@@ -29,6 +30,7 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
 
     private final Context context;
     private final List<ClienteAdapterObject> clientes;
+    private List<Integer> selectedItems = new LinkedList<>();
 
     public ClienteAdapter(Context context, List<ClienteAdapterObject> mesas) {
         this.context = context;
@@ -80,8 +82,13 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
                     @Override
                     public void onClick(View v) {
                         item.setSelected(!item.isSelected());
+                        if(item.isSelected()){
+                            selectedItems.add(item.getCliente().getCodigo());
+                        }else if(selectedItems.contains(item.getCliente().getCodigo())){
+                            selectedItems.remove(new Integer(item.getCliente().getCodigo()));
+                        }
                         notifyItemChanged(position);
-                        listener.onItemClick(item);
+                        listener.onItemClick(item, selectedItems);
                     }
                 });
             }

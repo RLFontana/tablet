@@ -55,6 +55,7 @@ public class MesaAdapter  extends RecyclerView.Adapter{
 
             switch (item.getMesa().getSituacao()){
                 case INDISPONIVEL:
+                case DISPONIVEL:
                     viewHolder.mesaCard.setEnabled(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         viewHolder.mesaCard.setCardBackgroundColor(context.getResources().getColor(R.color.silver, context.getTheme()));

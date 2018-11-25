@@ -35,7 +35,7 @@ public class MesaActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab_mesa);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +54,7 @@ public class MesaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(MesaAdapterObject item) {
                 Intent it = new Intent(MesaActivity.this, ClienteActivity.class);
-                it.putExtra("MESA_ID", String.valueOf(item.getMesa().getCodigo()));
+                it.putExtra("MESA_ID", item.getMesa().getCodigo());
                 startActivity(it);
             }
         };

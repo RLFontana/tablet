@@ -10,8 +10,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.ClienteAdapter;
@@ -29,7 +31,7 @@ public class ClienteActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_cliente);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,31 +39,43 @@ public class ClienteActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+        fab.setVisibility(View.GONE);
 
         Intent it = getIntent();
-        String mesaID = it.getStringExtra("MESA_ID");
+        int mesaID = it.getIntExtra("MESA_ID", -1);
 
         Mesa mesa = null;
-        if(mesaID != null && !"".equals(mesaID)){
+        if(mesaID > -1 && !"".equals(mesaID)){
             for(Mesa mesaSearch : InMemoryDB.mesaDAO){
-                if(mesaID.equals(mesaSearch.getCodigo())){
+                if(mesaID == mesaSearch.getCodigo()){
                     mesa = mesaSearch;
                     break;
                 }
             }
         }
 
+        TextView textMesa = findViewById(R.id.txt_mesa_cliente);
+        textMesa.setText(String.valueOf(mesa.getNumero())) ;
+
         ArrayList<ClienteAdapterObject> clientesArray = new ArrayList<>();
         for(Cliente cliente : mesa.getClientes()){
             clientesArray.add(new ClienteAdapterObject(cliente));
         }
 
-        clientesArray.add(new ClienteAdapterObject(new Cliente("teste", "teste")));
-
-
         ClienteAdapter.OnItemClickListener onClick = new ClienteAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(ClienteAdapterObject item) {
+            public void onItemClick(ClienteAdapterObject item, final List<Integer> selectedItems) {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(selectedItems != null && selectedItems.size() > 0){
+                                fab.setVisibility(View.VISIBLE);
+                            }else{
+                                fab.setVisibility(View.GONE);
+                            }
+                        }
+                    });
             }
         };
 
