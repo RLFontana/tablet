@@ -21,14 +21,20 @@ import java.util.List;
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.MesaAdapter;
 import br.com.easygo.cliente.adapters.ProdutoAdapter;
+import br.com.easygo.cliente.adapters.ProdutoDetalheAdapter;
+import br.com.easygo.cliente.adapters.SubPedidoAdapter;
 import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 import br.com.easygo.cliente.adapters.objects.ProdutoAdapterObject;
+import br.com.easygo.cliente.adapters.objects.SubPedidoAdapterObject;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.Produto;
 
 public class ProdutoActivity extends AppCompatActivity {
+
+    List<SubPedidoAdapterObject> subPedidos = new LinkedList<>();
+    SubPedidoAdapter subPedidoAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +70,11 @@ public class ProdutoActivity extends AppCompatActivity {
             });
         }
 
-        List clientesSelecionados = Arrays.asList(clienteID);
+
+        List<Integer> clientesSelecionados = new LinkedList<>();
+        for(int cli : clienteID){
+            clientesSelecionados.add(cli);
+        }
         List<Cliente> clientesPedido = new LinkedList<>();
         for(Cliente cliente : clientes){
             if(clientesSelecionados.contains(cliente.getCodigo())){
@@ -82,9 +92,25 @@ public class ProdutoActivity extends AppCompatActivity {
             }
             listaProduto.get(listaProduto.size() - 1).getProdutos().add(produto);
         }
+
+        ProdutoDetalheAdapter.OnItemClickListener onClick = new ProdutoDetalheAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final Produto item) {
+                subPedidos.get(0).addProduto(item, 1);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        subPedidoAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
+
+
         RecyclerView recyclerView = findViewById(R.id.rv_produtos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        ProdutoAdapter adapter = new ProdutoAdapter(this, listaProduto, null);
+        ProdutoAdapter adapter = new ProdutoAdapter(this, listaProduto, onClick);
         recyclerView.setAdapter(adapter);
 
 
@@ -97,6 +123,20 @@ public class ProdutoActivity extends AppCompatActivity {
             }
         });
         fab.setVisibility(View.GONE);
+
+
+        subPedidos.add(new SubPedidoAdapterObject(mesa, clientesPedido));
+        RecyclerView recyclerViewSubpedido = findViewById(R.id.rv_subpedido);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        recyclerViewSubpedido.setLayoutManager(mLayoutManager);
+        subPedidoAdapter = new SubPedidoAdapter(this, subPedidos, null);
+        recyclerViewSubpedido.setAdapter(subPedidoAdapter);
+
     }
 
 }

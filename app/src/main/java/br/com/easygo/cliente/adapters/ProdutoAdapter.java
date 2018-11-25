@@ -15,21 +15,19 @@ import java.util.List;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.objects.ProdutoAdapterObject;
+import br.com.easygo.cliente.model.Produto;
 
 public class ProdutoAdapter  extends RecyclerView.Adapter{
 
-    public interface OnItemClickListener {
-        void onItemClick(ProdutoAdapterObject item);
-    }
 
-    private final OnItemClickListener listener;
+    private final ProdutoDetalheAdapter.OnItemClickListener listener;
 
     private static final int EMPTY_VIEW = 10;
 
     private final Context context;
     private final List<ProdutoAdapterObject> produtos;
 
-    public ProdutoAdapter(Context context, List<ProdutoAdapterObject> produtos, OnItemClickListener onClick) {
+    public ProdutoAdapter(Context context, List<ProdutoAdapterObject> produtos, ProdutoDetalheAdapter.OnItemClickListener onClick) {
         this.context = context;
         this.produtos = produtos;
         this.listener = onClick;
@@ -53,7 +51,7 @@ public class ProdutoAdapter  extends RecyclerView.Adapter{
             viewHolder.produtoTipo.setText(item.getTipo());
 
             viewHolder.produtoLista.setLayoutManager(new LinearLayoutManager(context));
-            ProdutoDetalheAdapter adapter = new ProdutoDetalheAdapter(context, item.getProdutos(), null);
+            ProdutoDetalheAdapter adapter = new ProdutoDetalheAdapter(context, item.getProdutos(), listener);
             viewHolder.produtoLista.setAdapter(adapter);
 
             if(item.isExpaded()){
@@ -77,15 +75,6 @@ public class ProdutoAdapter  extends RecyclerView.Adapter{
                     }
                 }
             });
-
-            if(listener != null){
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        listener.onItemClick(item);
-                    }
-                });
-            }
         }
     }
 

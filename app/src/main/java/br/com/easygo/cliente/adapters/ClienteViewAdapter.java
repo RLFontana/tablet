@@ -17,11 +17,12 @@ import java.util.List;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
+import br.com.easygo.cliente.model.Cliente;
 
-public class ClienteAdapter  extends RecyclerView.Adapter{
+public class ClienteViewAdapter  extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(ClienteAdapterObject item, List<Integer> selectedItems);
+        void onItemClick(Cliente item, List<Integer> selectedItems);
     }
 
     private final OnItemClickListener listener;
@@ -29,69 +30,39 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
     private static final int EMPTY_VIEW = 10;
 
     private final Context context;
-    private final List<ClienteAdapterObject> clientes;
+    private final List<Cliente> clientes;
     private List<Integer> selectedItems = new LinkedList<>();
 
-    public ClienteAdapter(Context context, List<ClienteAdapterObject> clientes) {
+    public ClienteViewAdapter(Context context, List<Cliente> clientes) {
         this.context = context;
         this.listener = null;
-        this.clientes = clientes;
-    }
-
-    public ClienteAdapter(Context context, List<ClienteAdapterObject> clientes, OnItemClickListener listener) {
-        this.context = context;
-        this.listener = listener;
         this.clientes = clientes;
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == EMPTY_VIEW) {
-            return new ClienteEmptyViewHolder(parent);
+            return new ClienteViewEmptyViewHolder(parent);
         }
 
-        return new ClienteViewHolder(parent);
+        return new ClienteViewViewHolder(parent);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        if (holder instanceof ClienteViewHolder) {
-            final ClienteViewHolder viewHolder = (ClienteViewHolder) holder;
-            final ClienteAdapterObject item = clientes.get(position);
+        if (holder instanceof ClienteViewViewHolder) {
+            final ClienteViewViewHolder viewHolder = (ClienteViewViewHolder) holder;
+            final Cliente item = clientes.get(position);
 
-            viewHolder.clienteName.setText(item.getCliente().getNome());
+            viewHolder.clienteName.setText(item.getNome());
 
             Drawable drawable;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                drawable = context.getResources().getDrawable(item.getCliente().getImageResource(), context.getTheme());
+                drawable = context.getResources().getDrawable(item.getImageResource(), context.getTheme());
             } else {
-                drawable = context.getResources().getDrawable(item.getCliente().getImageResource());
+                drawable = context.getResources().getDrawable(item.getImageResource());
             }
             viewHolder.clienteImage.setImageDrawable(drawable);
-
-            if(item.isSelected()){
-                viewHolder.clienteCheckedImage.setVisibility(View.VISIBLE);
-            }else{
-                viewHolder.clienteCheckedImage.setVisibility(View.GONE);
-            }
-
-            //viewHolder.clienteImage.setImageDrawable(res);
-
-            if(listener != null){
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        item.setSelected(!item.isSelected());
-                        if(item.isSelected()){
-                            selectedItems.add(item.getCliente().getCodigo());
-                        }else if(selectedItems.contains(item.getCliente().getCodigo())){
-                            selectedItems.remove(new Integer(item.getCliente().getCodigo()));
-                        }
-                        notifyItemChanged(position);
-                        listener.onItemClick(item, selectedItems);
-                    }
-                });
-            }
         }
     }
 
@@ -109,14 +80,14 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
     }
 
     public void remove(int position) {
-        ClienteAdapterObject item = clientes.get(position);
+        Cliente item = clientes.get(position);
         if (clientes.contains(item)) {
             clientes.remove(position);
             notifyItemRemoved(position);
         }
     }
 
-    public ClienteAdapterObject getItemByPosition(int position){
+    public Cliente getItemByPosition(int position){
         return clientes == null ? null : clientes.get(position);
     }
 
@@ -128,15 +99,15 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
         return selecionados;
     }
 
-    static class ClienteViewHolder extends RecyclerView.ViewHolder {
+    static class ClienteViewViewHolder extends RecyclerView.ViewHolder {
         TextView clienteName;
         CardView clienteCard;
         LinearLayout clienteContent;
         ImageView clienteImage;
         ImageView clienteCheckedImage;
 
-        public ClienteViewHolder(ViewGroup parent) {
-            super(LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item_cliente, parent, false));
+        public ClienteViewViewHolder(ViewGroup parent) {
+            super(LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item_view_cliente, parent, false));
             //clienteCard = itemView.findViewById(R.id.cliente_card);
             clienteName = itemView.findViewById(R.id.txt_cliente_name);
             //clienteContent = itemView.findViewById(R.id.cliente_content);
@@ -145,8 +116,8 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
         }
     }
 
-    public class ClienteEmptyViewHolder extends RecyclerView.ViewHolder {
-        public ClienteEmptyViewHolder(ViewGroup parent) {
+    public class ClienteViewEmptyViewHolder extends RecyclerView.ViewHolder {
+        public ClienteViewEmptyViewHolder(ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item_cliente, parent, false));
 
         }

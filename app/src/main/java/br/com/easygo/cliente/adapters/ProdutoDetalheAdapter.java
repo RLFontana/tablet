@@ -49,6 +49,7 @@ public class ProdutoDetalheAdapter extends RecyclerView.Adapter{
 
             viewHolder.produtoName.setText(item.getNome());
             viewHolder.produtoValor.setText("R$ " + String.format("%.2f", item.getPrecoDouble()));
+
             if(listener != null) {
                 viewHolder.addProduto.setOnClickListener(new View.OnClickListener() {
                     @Override
