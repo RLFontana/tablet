@@ -31,6 +31,7 @@ public class InMemoryDB {
         fillSolicitacoes();
 
         pedidoDAO = new ArrayList<>();
+        itemPedidoDAO = new ArrayList<>();
     }
 
     private static void fillComandas() {
