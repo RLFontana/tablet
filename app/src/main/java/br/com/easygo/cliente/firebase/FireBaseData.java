@@ -1,21 +1,29 @@
 package br.com.easygo.cliente.firebase;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import org.json.JSONObject;
+
+import java.io.Serializable;
+import java.util.Map;
+
 import br.com.easygo.cliente.model.MainCardTipo;
 
-public class FirebaseData {
+public class FireBaseData implements Serializable {
 
     private MainCardTipo type;
     private int value;
 
-    public FirebaseData() {
+    public FireBaseData() {
 
     }
 
-    public FirebaseData(String type, String value) {
+    public FireBaseData(String type, String value) {
         this(MainCardTipo.valueOf(Integer.valueOf(type)), Integer.valueOf(value));
     }
 
-    public FirebaseData(MainCardTipo type, int value) {
+    public FireBaseData(MainCardTipo type, int value) {
         this.type = type;
         this.value = value;
     }
@@ -34,5 +42,11 @@ public class FirebaseData {
 
     public void setValue(int value) {
         this.value = value;
+    }
+
+    public static FireBaseData parse(Map<String, String> data) {
+        JSONObject json = new JSONObject(data);
+        Gson gson = new GsonBuilder().create();
+        return gson.fromJson(json.toString(), FireBaseData.class);
     }
 }

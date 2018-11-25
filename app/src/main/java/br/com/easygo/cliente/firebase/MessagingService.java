@@ -24,9 +24,8 @@ public class MessagingService extends FirebaseMessagingService {
 
         Log.d(TAG, "ID: " + remoteMessage.getCollapseKey());
         if(remoteMessage != null && remoteMessage.getData().containsKey("cardTipo")){
-            //Intent intent = new Intent(this, UpdateCheckService.class);
-            //intent.putExtra("FireBaseData", remoteMessage.getD);
-            //startService(intent);
+            FireBaseData firebaseData = FireBaseData.parse(remoteMessage.getData());
+
         }
     }
 }
