@@ -11,6 +11,7 @@ import br.com.easygo.cliente.model.ItemPedido;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.Pedido;
 import br.com.easygo.cliente.model.Produto;
+import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.SituacaoMesa;
 import br.com.easygo.cliente.model.Solicitacao;
 import br.com.easygo.cliente.model.TipoProduto;
@@ -21,6 +22,8 @@ import br.com.easygo.cliente.model.TipoProduto;
  * Contact: contato@opcaoti.com
  */
 public class InMemoryDB {
+
+    public static Garcom currentGarcom;
 
     public static void fillObjects(){
         fillMesas();
@@ -116,5 +119,24 @@ public class InMemoryDB {
     public static List<Produto> produtoDAO;
     public static List<Pedido> pedidoDAO;
     public static List<ItemPedido> itemPedidoDAO;
+
+
+    public static void insertSolicitacao(int codigoComanda){
+        for (Comanda comanda: comandaDAO) {
+            if (comanda.getCodigo()==codigoComanda)
+                solitacaoDAO.add(new Solicitacao(solitacaoDAO.size(), comanda, currentGarcom));
+
+        }
+    }
+
+    public static void insertItemPedidoPronto(int codigoItemPedido){
+        for (ItemPedido item : itemPedidoDAO){
+            if (item.getCodigo()==codigoItemPedido) {
+                int index = itemPedidoDAO.indexOf(item);
+                itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.PRONTO_PARA_ENTREGA);
+            }
+        }
+    }
+
 
 }
