@@ -1,10 +1,13 @@
 package br.com.easygo.cliente;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -12,6 +15,7 @@ import java.util.List;
 
 import br.com.easygo.cliente.adapters.MainAdapter;
 import br.com.easygo.cliente.adapters.MesaAdapter;
+import br.com.easygo.cliente.activities.MesaActivity;
 import br.com.easygo.cliente.adapters.PedidoAdapter;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
@@ -45,7 +49,18 @@ public class MainActivity extends AppCompatActivity {
         SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
         solicitacaoDialog.setArguments(savedInstanceState);
         solicitacaoDialog.show(getSupportFragmentManager(), "tag");
+
         InMemoryDB.currentGarcom = InMemoryDB.garcomDAO.get(0);
+
+        Button pedido = findViewById(R.id.button);
+        final Context context = this;
+        pedido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mesa = new Intent(MainActivity.this, MesaActivity.class);
+                context.startActivity(mesa);
+            }
+        });
 
         fillList();
 

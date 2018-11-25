@@ -20,4 +20,5 @@ public enum TipoProduto {
     public int getTipo(){
         return this.tipo;
     }
+
 }

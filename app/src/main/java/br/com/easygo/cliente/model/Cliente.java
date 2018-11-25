@@ -1,9 +1,11 @@
 package br.com.easygo.cliente.model;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.util.Format;
 
 public class Cliente {
@@ -19,6 +21,13 @@ public class Cliente {
         this.codigo = codigo;
         this.nome = nome;
         this.telefone = telefone;
+    }
+
+    public Cliente(int codigo, String nome, String telefone, String foto) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.telefone = telefone;
+        this.foto = foto;
     }
 
     public Cliente(int codigo, String nome, String telefone, Date dataNascimento, String foto, List<Comanda> listaComanda) {
@@ -80,6 +89,17 @@ public class Cliente {
 
     public void setListaComanda(List<Comanda> listaComanda) {
         this.listaComanda = listaComanda;
+    }
+
+    public int getImageResource() {
+        if(this.foto == null || "".equals(this.foto)) return R.drawable.avatar;
+        try {
+            Field idField = R.drawable.class.getDeclaredField(this.foto);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return R.drawable.avatar;
+        }
     }
 
     @Override

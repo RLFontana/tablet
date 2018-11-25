@@ -30,10 +30,10 @@ public class MesaAdapter  extends RecyclerView.Adapter{
     private final Context context;
     private final List<MesaAdapterObject> mesas;
 
-    public MesaAdapter(Context context, List<MesaAdapterObject> mesas) {
+    public MesaAdapter(Context context, List<MesaAdapterObject> mesas, OnItemClickListener onClick) {
         this.context = context;
-        this.listener = null;
         this.mesas = mesas;
+        this.listener = onClick;
     }
 
     @Override
@@ -51,10 +51,11 @@ public class MesaAdapter  extends RecyclerView.Adapter{
             final MesaViewHolder viewHolder = (MesaViewHolder) holder;
             final MesaAdapterObject item = mesas.get(position);
 
-            viewHolder.mesaName.setText(item.getMesa().getNumero() + "");
+            viewHolder.mesaName.setText(String.valueOf(item.getMesa().getNumero()));
 
             switch (item.getMesa().getSituacao()){
                 case INDISPONIVEL:
+                case DISPONIVEL:
                     viewHolder.mesaCard.setEnabled(false);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         viewHolder.mesaCard.setCardBackgroundColor(context.getResources().getColor(R.color.silver, context.getTheme()));
