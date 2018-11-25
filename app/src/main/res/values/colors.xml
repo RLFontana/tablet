@@ -6,4 +6,9 @@
     <color name="transparent">#00000000</color>
     <color name="silver">#bdc3c7</color>
     <color name="indigo_300">#7986CB</color>
+
+    <color name="solicitacao_atendimento">#F5F5F5</color>
+    <color name="pedido_cliente">#42A5F5</color>
+    <color name="item_pedido_confirmado">#FFE082</color>
+    <color name="item_pedido_entrega">#81C784</color>
 </resources>

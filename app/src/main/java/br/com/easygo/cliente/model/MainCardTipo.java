@@ -15,4 +15,18 @@ public enum MainCardTipo {
     public int getTipo(){
         return this.tipo;
     }
+
+
+    public static MainCardTipo valueOf(int tipo){
+        switch (tipo){
+            case 0:
+                return SOLICITACAO_ATENDIMENTO;
+            case 1:
+                return PEDIDO_CLIENTE;
+            case 2:
+                return ITEM_PEDIDO_CONFIRMADO;
+            default:
+                return ITEM_PEDIDO_ENTREGA;
+        }
+    }
 }

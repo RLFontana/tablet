@@ -16,11 +16,11 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"/>
 
-    <ListView
+    <android.support.v7.widget.RecyclerView
         android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:id="@+id/lv_pedidos"/>
+        android:id="@+id/rcvw_cards">
+
+    </android.support.v7.widget.RecyclerView>
 
 </RelativeLayout>

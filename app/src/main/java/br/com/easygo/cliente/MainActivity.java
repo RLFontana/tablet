@@ -1,19 +1,33 @@
 package br.com.easygo.cliente;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.easygo.cliente.adapters.MainAdapter;
+import br.com.easygo.cliente.adapters.MesaAdapter;
 import br.com.easygo.cliente.activities.MesaActivity;
 import br.com.easygo.cliente.adapters.PedidoAdapter;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
+import br.com.easygo.cliente.firebase.FireBaseData;
+import br.com.easygo.cliente.firebase.FirebaseReceiver;
+import br.com.easygo.cliente.firebase.MessagingService;
+import br.com.easygo.cliente.firebase.OnReceiveNotification;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.Garcom;
@@ -30,11 +44,8 @@ import br.com.easygo.cliente.model.TipoProduto;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<MainCardItem> itemPedidos;
-    ListView listaItens;
-    private PedidoAdapter adapter;
-    private Garcom currentGarcom;
-
+    List<MainCardItem> itemPedidos;
+    private MainAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +57,33 @@ public class MainActivity extends AppCompatActivity {
         SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
         solicitacaoDialog.setArguments(savedInstanceState);
         solicitacaoDialog.show(getSupportFragmentManager(), "tag");
-        currentGarcom = InMemoryDB.garcomDAO.get(0);
+
+        BroadcastReceiver receiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                try {
+                    FireBaseData value = (FireBaseData)intent.getSerializableExtra("Data");
+                    MainCardTipo tipo = MainCardTipo.SOLICITACAO_ATENDIMENTO;
+                    if (tipo == MainCardTipo.SOLICITACAO_ATENDIMENTO) {
+                        int codigoComanda = 1;
+                        InMemoryDB.insertSolicitacao(codigoComanda);
+                        refreshDataSet();
+                    }
+                    else if (tipo == MainCardTipo.ITEM_PEDIDO_ENTREGA){
+                        int codigoItemPedido = 1;
+                        InMemoryDB.insertItemPedidoPronto(codigoItemPedido);
+                        refreshDataSet();
+                    }
+                    refreshDataSet();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter());
+
+        InMemoryDB.currentGarcom = InMemoryDB.garcomDAO.get(0);
 
         Button pedido = findViewById(R.id.button);
         final Context context = this;
@@ -58,14 +95,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listaItens = findViewById(R.id.lv_pedidos);
-
         fillList();
 
-        adapter = new PedidoAdapter(getApplicationContext(), itemPedidos);
-
-        listaItens.setAdapter(adapter);
+        RecyclerView recyclerView = findViewById(R.id.rcvw_cards);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false));
+        adapter = new MainAdapter(this, itemPedidos);
+        recyclerView.setAdapter(adapter);
+        FirebaseMessaging.getInstance().subscribeToTopic("tablet");
     }
+
+    public void refreshDataSet(){
+        fillList();
+        adapter.setItens(itemPedidos);
+        adapter.notifyDataSetChanged();
+    }
+
+
 
     private void fillList() {
         itemPedidos = new ArrayList<>();
@@ -73,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         //SOLICITACAO DE ATENDIMENTO
 
         for (Solicitacao solicitacao: InMemoryDB.solitacaoDAO) {
-            if(solicitacao.getGarcom().getCodigo() == currentGarcom.getCodigo()
+            if(solicitacao.getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()
                     && solicitacao.isAtendida()){
                 Cliente c = solicitacao.getComanda().getCliente();
                 Mesa m =  solicitacao.getComanda().getMesaAtual();
@@ -103,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
             //ITENS A ENTREGAR
             if (itemPedido.getSituacao() == SituacaoItemPedido.PRONTO_PARA_ENTREGA &&
-                    itemPedido.getGarcom().getCodigo() == currentGarcom.getCodigo()){
+                    itemPedido.getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()){
 
                 List<Comanda> comandas = itemPedido.getPedido().getComandas();
                 String nomeCliente = "";
@@ -128,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
             //ITENS PEDIDOS PELO GARCOM ATUAL
             if (itemPedido.getSituacao() == SituacaoItemPedido.CONFIRMADO_PELO_GARCOM &&
-                    itemPedido.getPedido().getGarcom().getCodigo() == currentGarcom.getCodigo()){
+                    itemPedido.getPedido().getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()){
                 List<Comanda> comandas = itemPedido.getPedido().getComandas();
                 String nomeCliente = "";
                 for(Comanda comanda : comandas){
@@ -215,7 +260,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 int index = InMemoryDB.solitacaoDAO.indexOf(solicitacao);
                 InMemoryDB.solitacaoDAO.get(index).setAtendida(true);
-                Pedido pedido = new Pedido(0, InMemoryDB.pedidoDAO.size(), currentGarcom);
+                Pedido pedido = new Pedido(0, InMemoryDB.pedidoDAO.size(), InMemoryDB.currentGarcom);
                 InMemoryDB.pedidoDAO.add(pedido);
             }
         };
