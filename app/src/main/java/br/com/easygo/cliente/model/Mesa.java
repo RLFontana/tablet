@@ -1,6 +1,9 @@
 package br.com.easygo.cliente.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import br.com.easygo.cliente.dao.InMemoryDB;
 
 public class Mesa {
 
@@ -79,5 +82,13 @@ public class Mesa {
 
     public void setItensPedidos(List<ItemPedido> itensPedidos) {
         this.itensPedidos = itensPedidos;
+    }
+
+    public List<Cliente> getClientes(){
+        List<Cliente> clientes = new ArrayList<>();
+        for (Comanda comanda : InMemoryDB.comandaDAO){
+            clientes.add(comanda.getCliente());
+        }
+        return clientes;
     }
 }

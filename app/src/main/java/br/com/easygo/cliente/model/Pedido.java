@@ -1,6 +1,7 @@
 package br.com.easygo.cliente.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,14 @@ public class Pedido {
         this.dataConfirmacao = dataConfirmacao;
         this.garcom = garcom;
         this.listaItemPedido = listaItemPedido;
+    }
+
+
+    public Pedido(int codigo, int numero, Garcom garcom) {
+        this.codigo = codigo;
+        this.numero = numero;
+        this.dataInclusao = Calendar.getInstance().getTime();
+        this.garcom = garcom;
     }
 
     public Pedido(Garcom garcom, List<Comanda> comandas, ItemPedido pedido){

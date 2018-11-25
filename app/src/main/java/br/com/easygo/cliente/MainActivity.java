@@ -58,14 +58,17 @@ public class MainActivity extends AppCompatActivity {
 
         //SOLICITACAO DE ATENDIMENTO
         List<MainCardAcao> acoesSolicitacao = new ArrayList<>();
-        acoesSolicitacao.add(new MainCardAcao(0, "Atender", atenderSolicitacao_onClick()));
-        acoesSolicitacao.add(new MainCardAcao(1, "Cancelar", cancelarSolicitacao_onClick()));
+        acoesSolicitacao.add(new MainCardAcao(0, "Atender"));
+        acoesSolicitacao.add(new MainCardAcao(1, "Cancelar"));
 
         for (Solicitacao solicitacao: InMemoryDB.solitacaoDAO) {
             if(solicitacao.getGarcom().getCodigo() == currentGarcom.getCodigo()
                     && solicitacao.isAtendida()){
                 Cliente c = solicitacao.getComanda().getCliente();
                 Mesa m =  solicitacao.getComanda().getMesaAtual();
+
+                acoesSolicitacao.get(0).setOnClickListener(atenderSolicitacao_onClick(solicitacao));
+                acoesSolicitacao.get(1).setOnClickListener(cancelarSolicitacao_onClick(solicitacao));
                 itemPedidos.add(new MainCardItem(
                         "Mesa "+ m.getCodigo(),
                         c.getNome(),
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
                 itemPedidos.add(new MainCardItem(
-                        "Bar",
+                        titulo,
                         nomeCliente,
                         itemPedido.getProduto().getNome(),
                         MainCardTipo.ITEM_PEDIDO_ENTREGA,
@@ -168,20 +171,22 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
-    private View.OnClickListener cancelarSolicitacao_onClick() {
+    private View.OnClickListener cancelarSolicitacao_onClick(final Solicitacao solicitacao) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                InMemoryDB.solitacaoDAO.remove(solicitacao);
+                //Notificar usuario?
             }
         };
     }
 
-    private View.OnClickListener atenderSolicitacao_onClick() {
+    private View.OnClickListener atenderSolicitacao_onClick(final Solicitacao solicitacao) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Pedido pedido = new Pedido(0, InMemoryDB.pedidoDAO.size(), currentGarcom);
+                InMemoryDB.pedidoDAO.add(pedido);
             }
         };
     }

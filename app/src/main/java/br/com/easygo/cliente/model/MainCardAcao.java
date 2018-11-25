@@ -27,4 +27,28 @@ public class MainCardAcao{
         this.nome = nome;
         this.onClickListener = onClickListener;
     }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public View.OnClickListener getOnClickListener() {
+        return onClickListener;
+    }
+
+    public void setOnClickListener(View.OnClickListener onClickListener) {
+        this.onClickListener = onClickListener;
+    }
 }

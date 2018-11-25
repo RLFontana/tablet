@@ -29,6 +29,8 @@ public class InMemoryDB {
         fillProdutos();
         fillComandas();
         fillSolicitacoes();
+
+        pedidoDAO = new ArrayList<>();
     }
 
     private static void fillComandas() {
@@ -45,7 +47,6 @@ public class InMemoryDB {
         comandaDAO.add(new Comanda(9, 10,  clienteDAO.get(9)));
         comandaDAO.add(new Comanda(10, 11,  clienteDAO.get(10)));
         comandaDAO.add(new Comanda(11, 12,  clienteDAO.get(11)));
-        comandaDAO.add(new Comanda(12, 13,  clienteDAO.get(12)));
     }
 
     private static void fillSolicitacoes() {
@@ -82,7 +83,7 @@ public class InMemoryDB {
 
     private static void fillClientes() {
         clienteDAO = new ArrayList<>();
-        clienteDAO.add(new Cliente(0, "Rafael","99999-9900" ));
+        clienteDAO.add(new Cliente(0, "Rafaela","99999-9900" ));
         clienteDAO.add(new Cliente(1, "Guthierry","99999-9901" ));
         clienteDAO.add(new Cliente(2, "Vinícius","99999-9902" ));
         clienteDAO.add(new Cliente(3, "Luiza","99999-9903" ));
@@ -91,10 +92,9 @@ public class InMemoryDB {
         clienteDAO.add(new Cliente(6, "Enzo","99999-9906" ));
         clienteDAO.add(new Cliente(7, "Valentina","99999-9907" ));
         clienteDAO.add(new Cliente(8, "Vicente","99999-9908" ));
-        clienteDAO.add(new Cliente(9, "Daniel","99999-9909" ));
-        clienteDAO.add(new Cliente(10, "Liliane","99999-9910" ));
-        clienteDAO.add(new Cliente(11, "Jocival","99999-9911" ));
-        clienteDAO.add(new Cliente(12, "Aroldo","99999-9912" ));
+        clienteDAO.add(new Cliente(9, "Liliane","99999-9909" ));
+        clienteDAO.add(new Cliente(10, "Jocival","99999-9910" ));
+        clienteDAO.add(new Cliente(11, "Aroldo","99999-9911" ));
     }
 
     private static void fillMesas() {
