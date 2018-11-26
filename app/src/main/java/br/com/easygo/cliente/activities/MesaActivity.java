@@ -43,7 +43,7 @@ public class MesaActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        fab.setVisibility(View.GONE);
+        fab.setEnabled(false);
 
         ArrayList<MesaAdapterObject> mesasArray = new ArrayList<>();
         for(Mesa mesa : InMemoryDB.mesaDAO){

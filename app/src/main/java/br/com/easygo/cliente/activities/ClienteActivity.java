@@ -51,7 +51,7 @@ public class ClienteActivity extends AppCompatActivity {
                 //        .setAction("Action", null).show();
             }
         });
-        fab.setVisibility(View.GONE);
+        fab.setEnabled(false);
 
         Mesa mesa = null;
         if(mesaID > -1 && !"".equals(mesaID)){
@@ -92,9 +92,9 @@ public class ClienteActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             if(selectedItems != null && selectedItems.size() > 0){
-                                fab.setVisibility(View.VISIBLE);
+                                fab.setEnabled(true);
                             }else{
-                                fab.setVisibility(View.GONE);
+                                fab.setEnabled(false);
                             }
                         }
                     });

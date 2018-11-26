@@ -122,7 +122,7 @@ public class ProdutoActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        fab.setVisibility(View.GONE);
+        fab.setEnabled(false);
 
 
         subPedidos.add(new SubPedidoAdapterObject(mesa, clientesPedido));

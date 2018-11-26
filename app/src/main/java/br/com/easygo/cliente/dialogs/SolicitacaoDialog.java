@@ -13,16 +13,16 @@ import br.com.easygo.cliente.R;
 
 public class SolicitacaoDialog extends DialogFragment {
 
-    private final boolean isSolicitacao;
+    private boolean isSolicitacao;
 
     public SolicitacaoDialog() {
         super();
-        isSolicitacao = getArguments() != null ? getArguments().getBoolean("isSolicitacao") : false;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        isSolicitacao = getArguments() != null ? getArguments().getBoolean("isSolicitacao") : false;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 

@@ -44,9 +44,4 @@ public class FireBaseData implements Serializable {
         this.value = value;
     }
 
-    public static FireBaseData parse(Map<String, String> data) {
-        JSONObject json = new JSONObject(data);
-        Gson gson = new GsonBuilder().create();
-        return gson.fromJson(json.toString(), FireBaseData.class);
-    }
 }

@@ -1,46 +1,38 @@
 package br.com.easygo.cliente;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListView;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import br.com.easygo.cliente.adapters.MainAdapter;
-import br.com.easygo.cliente.adapters.MesaAdapter;
 import br.com.easygo.cliente.activities.MesaActivity;
-import br.com.easygo.cliente.adapters.PedidoAdapter;
+import br.com.easygo.cliente.adapters.MainAdapter;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
 import br.com.easygo.cliente.firebase.FireBaseData;
-import br.com.easygo.cliente.firebase.FirebaseReceiver;
-import br.com.easygo.cliente.firebase.MessagingService;
-import br.com.easygo.cliente.firebase.OnReceiveNotification;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
-import br.com.easygo.cliente.model.Garcom;
 import br.com.easygo.cliente.model.ItemPedido;
 import br.com.easygo.cliente.model.MainCardAcao;
 import br.com.easygo.cliente.model.MainCardItem;
 import br.com.easygo.cliente.model.MainCardTipo;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.Pedido;
-import br.com.easygo.cliente.model.Produto;
 import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.Solicitacao;
-import br.com.easygo.cliente.model.TipoProduto;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,28 +44,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         InMemoryDB.fillObjects();
-        Bundle extra = new Bundle();
-        extra.putBoolean("isSolicitacao", false);
-        SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
-        solicitacaoDialog.setArguments(savedInstanceState);
-        solicitacaoDialog.show(getSupportFragmentManager(), "tag");
+
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 try {
-                    FireBaseData value = (FireBaseData)intent.getSerializableExtra("Data");
-                    MainCardTipo tipo = MainCardTipo.SOLICITACAO_ATENDIMENTO;
+                    Bundle extra = new Bundle();
+
+                    SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
+                    MainCardTipo tipo = ((FireBaseData)intent.getSerializableExtra("Data")).getType();
                     if (tipo == MainCardTipo.SOLICITACAO_ATENDIMENTO) {
+                        extra.putBoolean("isSolicitacao", true);
                         int codigoComanda = 1;
                         InMemoryDB.insertSolicitacao(codigoComanda);
                         refreshDataSet();
                     }
                     else if (tipo == MainCardTipo.ITEM_PEDIDO_ENTREGA){
+                        extra.putBoolean("isSolicitacao", false);
                         int codigoItemPedido = 1;
                         InMemoryDB.insertItemPedidoPronto(codigoItemPedido);
                         refreshDataSet();
                     }
+                    solicitacaoDialog.setArguments(extra);
+                    solicitacaoDialog.show(getSupportFragmentManager(), "tag");
                     refreshDataSet();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -81,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         };
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter());
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter("notification-firebase"));
 
         InMemoryDB.currentGarcom = InMemoryDB.garcomDAO.get(0);
 

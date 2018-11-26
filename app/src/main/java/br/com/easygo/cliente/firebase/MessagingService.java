@@ -24,12 +24,12 @@ public class MessagingService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
 
         Log.d(TAG, "ID: " + remoteMessage.getCollapseKey());
-        if(remoteMessage != null && remoteMessage.getData().containsKey("cardTipo")){
-            FireBaseData firebaseData = FireBaseData.parse(remoteMessage.getData());
+        if(remoteMessage != null && remoteMessage.getData().containsKey("type")){
+            FireBaseData firebaseData = new FireBaseData(remoteMessage.getData().get("type"), remoteMessage.getData().get("value"));
 
             LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
 
-            Intent intent = new Intent();
+            Intent intent = new Intent("notification-firebase");
             intent.putExtra("Data", firebaseData);
             broadcaster.sendBroadcast(intent);
         }

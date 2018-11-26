@@ -23,7 +23,7 @@
             android:layout_height="30dp"
             android:text="@string/tv_novo_pedido"
             android:textAlignment="center"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/solicitacao_atendimento"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
