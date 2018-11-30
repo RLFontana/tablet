@@ -1,33 +1,17 @@
 package br.com.easygo.cliente.model;
 
-import java.util.List;
+import java.util.Date;
 
-public class Solicitacao{
+public class Solicitacao implements Comparable<Solicitacao>{
 
-    private int codigo;
     private Comanda comanda;
-    private List<Pedido> pedidos;
-    private Garcom garcom;
-    private boolean atendida;
+    private Mesa mesa;
+    private Date dataSolicitacao;
 
-    public Solicitacao(int codigo, Comanda comanda,  Garcom garcom) {
-        this.codigo = codigo;
+    public Solicitacao(Comanda comanda, Mesa mesa) {
         this.comanda = comanda;
-        this.garcom = garcom;
-    }
-    public Solicitacao(int codigo, Comanda comanda,  Garcom garcom, boolean atendida) {
-        this.codigo = codigo;
-        this.comanda = comanda;
-        this.garcom = garcom;
-        this.atendida = atendida;
-    }
-
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+        this.mesa = mesa;
+        this.dataSolicitacao = new Date(System.currentTimeMillis());
     }
 
     public Comanda getComanda() {
@@ -38,29 +22,30 @@ public class Solicitacao{
         this.comanda = comanda;
     }
 
-    public List<Pedido> getPedidos() {
-        return pedidos;
+    public Mesa getMesa() {
+        return mesa;
     }
 
-    public void setPedidos(List<Pedido> pedidos) {
-        this.pedidos = pedidos;
+    public void setMesa(Mesa mesa) {
+        this.mesa = mesa;
     }
 
-    public Garcom getGarcom() {
-        return garcom;
+    public Date getDataSolicitacao() {
+        return dataSolicitacao;
     }
 
-    public void setGarcom(Garcom garcom) {
-        this.garcom = garcom;
+    public void setDataSolicitacao(Date dataSolicitacao) {
+        this.dataSolicitacao = dataSolicitacao;
     }
 
-    public boolean isAtendida() {
-        return atendida;
+    @Override
+    public int compareTo(Solicitacao o) {
+        return this.dataSolicitacao.compareTo(o.dataSolicitacao);
     }
 
-    public void setAtendida(boolean atendida) {
-        this.atendida = atendida;
+    @Override
+    public boolean equals(Object obj) {
+        Solicitacao o = (Solicitacao) obj;
+        return this.comanda.equals(o.comanda) && this.mesa.equals(o.mesa) && this.dataSolicitacao.equals(o.dataSolicitacao);
     }
-
-
 }

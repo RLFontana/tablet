@@ -52,7 +52,7 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
             final SubPedidoViewHolder viewHolder = (SubPedidoViewHolder) holder;
             final SubPedidoAdapterObject item = pedidos.get(position);
 
-            viewHolder.mesaName.setText("Mesa " + item.getMesa().getNumero());
+            viewHolder.mesaName.setText("Mesa " + item.getMesa().getId());
             viewHolder.valorTotal.setText("R$ " + String.format("%.2f", item.getValorTotal()));
 
             if(item.getValorTotal() > 0){

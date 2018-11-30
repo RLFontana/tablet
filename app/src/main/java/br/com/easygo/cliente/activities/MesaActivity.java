@@ -15,14 +15,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.com.easygo.cliente.R;
-import br.com.easygo.cliente.adapters.ClienteAdapter;
 import br.com.easygo.cliente.adapters.MesaAdapter;
-import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 import br.com.easygo.cliente.adapters.objects.MesaAdapterObject;
 import br.com.easygo.cliente.dao.InMemoryDB;
-import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Mesa;
-import br.com.easygo.cliente.model.SituacaoMesa;
 
 public class MesaActivity extends AppCompatActivity {
 
@@ -35,16 +31,6 @@ public class MesaActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab_mesa);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        fab.setEnabled(false);
-
         ArrayList<MesaAdapterObject> mesasArray = new ArrayList<>();
         for(Mesa mesa : InMemoryDB.mesaDAO){
             mesasArray.add(new MesaAdapterObject(mesa));
@@ -54,7 +40,7 @@ public class MesaActivity extends AppCompatActivity {
             @Override
             public void onItemClick(MesaAdapterObject item) {
                 Intent it = new Intent(MesaActivity.this, ClienteActivity.class);
-                it.putExtra("MESA_ID", item.getMesa().getCodigo());
+                it.putExtra("MESA_ID", item.getMesa().getNumero());
                 startActivity(it);
             }
         };

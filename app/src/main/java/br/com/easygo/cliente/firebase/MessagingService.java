@@ -25,7 +25,7 @@ public class MessagingService extends FirebaseMessagingService {
 
         Log.d(TAG, "ID: " + remoteMessage.getCollapseKey());
         if(remoteMessage != null && remoteMessage.getData().containsKey("type")){
-            FireBaseData firebaseData = new FireBaseData(remoteMessage.getData().get("type"), remoteMessage.getData().get("value"));
+            FireBaseData firebaseData = new FireBaseData(remoteMessage.getData().get("type"), remoteMessage.getData().get("value"), remoteMessage.getData().get("origin"));
 
             LocalBroadcastManager broadcaster = LocalBroadcastManager.getInstance(getBaseContext());
 

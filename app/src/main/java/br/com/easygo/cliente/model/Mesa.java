@@ -5,34 +5,28 @@ import java.util.List;
 
 import br.com.easygo.cliente.dao.InMemoryDB;
 
-public class Mesa {
+public class Mesa implements Comparable<Mesa>{
 
-    private int codigo;
+    private int id;
     private int numero;
     private int quantidadeCadeira;
     private SituacaoMesa situacao;
-    private List<Comanda> comandas;
     private List<ItemPedido> itensPedidos;
 
-    public Mesa(int codigo, int numero, int quantidadeCadeira, SituacaoMesa situacao) {
-        this.codigo = codigo;
+    public Mesa(int id, int numero, int quantidadeCadeira, SituacaoMesa situacao, List<ItemPedido> itensPedidos) {
+        this.id = id;
         this.numero = numero;
         this.quantidadeCadeira = quantidadeCadeira;
         this.situacao = situacao;
+        this.itensPedidos = itensPedidos;
     }
 
-
-
-    public Mesa(int numero, int quantidadeCadeira){
-        this(0, numero, quantidadeCadeira, SituacaoMesa.DISPONIVEL);
+    public int getId() {
+        return id;
     }
 
-    public int getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getNumero() {
@@ -59,23 +53,6 @@ public class Mesa {
         this.situacao = situacao;
     }
 
-    @Override
-    public String toString() {
-        return "[Mesa]" + "\n" +
-                "codigo:" + codigo + "\n" +
-                "numero: " + numero + "\n" +
-                "quantidadeCadeira: " + quantidadeCadeira + "\n" +
-                "situacao: " + situacao + "\n";
-    }
-
-    public List<Comanda> getComandas() {
-        return comandas;
-    }
-
-    public void setComandas(List<Comanda> comandas) {
-        this.comandas = comandas;
-    }
-
     public List<ItemPedido> getItensPedidos() {
         return itensPedidos;
     }
@@ -84,12 +61,29 @@ public class Mesa {
         this.itensPedidos = itensPedidos;
     }
 
-    public List<Cliente> getClientes(){
-        List<Cliente> clientes = new ArrayList<>();
-        for (Comanda comanda : InMemoryDB.comandaDAO){
-            if (comanda.getMesaAtual().getCodigo() == this.codigo)
-                clientes.add(comanda.getCliente());
+    @Override
+    public String toString() {
+        return "[Mesa]" + "\n" +
+                "codigo:" + numero + "\n" +
+                "id: " + id + "\n" +
+                "quantidadeCadeira: " + quantidadeCadeira + "\n" +
+                "situacao: " + situacao + "\n";
+    }
+
+    @Override
+    public int compareTo(Mesa o) {
+        if (this.numero == o.numero) {
+            return 0;
+        } else if (this.numero > o.numero) {
+            return 1;
+        } else {
+            return -1;
         }
-        return clientes;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Mesa o = (Mesa) obj;
+        return this.id == o.id && this.numero == o.numero && this.quantidadeCadeira == o.quantidadeCadeira && this.situacao.equals(o.situacao) && this.itensPedidos.equals(o.itensPedidos);
     }
 }

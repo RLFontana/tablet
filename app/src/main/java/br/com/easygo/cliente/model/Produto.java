@@ -4,14 +4,16 @@ import java.math.BigDecimal;
 
 import br.com.easygo.cliente.util.Format;
 
-public class Produto {
+public class Produto implements Comparable<Produto>{
+    private int id;
     private int codigo;
     private String nome;
     private TipoProduto tipo;
     private String descricao;
     private BigDecimal preco;
 
-    public Produto(int codigo, String nome, TipoProduto tipo, String descricao, BigDecimal preco) {
+    public Produto(int id, int codigo, String nome, TipoProduto tipo, String descricao, BigDecimal preco) {
+        this.id = id;
         this.codigo = codigo;
         this.nome = nome;
         this.tipo = tipo;
@@ -19,8 +21,16 @@ public class Produto {
         this.preco = preco;
     }
 
-    public Produto(int codigo, String nome, TipoProduto tipo, String descricao, double preco){
-        this(codigo, nome, tipo, descricao, new BigDecimal(preco));
+    public Produto(int id, int codigo, String nome, TipoProduto tipo, String descricao, double preco) {
+        this(id, codigo, nome, tipo, descricao, new BigDecimal(preco));
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCodigo() {
@@ -59,12 +69,12 @@ public class Produto {
         return preco;
     }
 
-    public double getPrecoDouble(){
-        return preco.doubleValue();
-    }
-
     public void setPreco(BigDecimal preco) {
         this.preco = preco;
+    }
+
+    public double getPrecoDouble(){
+        return preco.doubleValue();
     }
 
     public void setPreco(double preco){
@@ -79,5 +89,16 @@ public class Produto {
                 "tipoProduto: " + tipo + "\n" +
                 "descricao: " + descricao + "\n" +
                 "preco: " + Format.price(getPrecoDouble()) + "\n";
+    }
+
+    @Override
+    public int compareTo(Produto o) {
+        return this.nome.compareTo(o.nome);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Produto o = (Produto) obj;
+        return this.id == o.id && this.codigo == o.codigo && this.nome.equals(o.nome) && this.tipo.equals(o.tipo) && this.descricao.equals(o.descricao) && this.preco.equals(o.preco);
     }
 }

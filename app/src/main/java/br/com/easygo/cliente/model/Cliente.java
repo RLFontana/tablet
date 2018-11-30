@@ -8,7 +8,7 @@ import java.util.List;
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.util.Format;
 
-public class Cliente {
+public class Cliente implements Comparable<Cliente>{
 
     private int codigo;
     private String nome;
@@ -119,4 +119,15 @@ public class Cliente {
         return stringBuilder.toString();
     }
 
+    @Override
+    public int compareTo(Cliente o) {
+        return this.nome.compareTo(o.nome);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Cliente o = (Cliente) obj;
+        return this.codigo == o.codigo && this.nome.equals(o.nome) && this.telefone.equals(o.telefone) && ((this.dataNascimento == null && o.dataNascimento == null) || this.dataNascimento.equals(o.dataNascimento)) && ((this.foto == null && o.foto == null) || this.foto.equals(o.foto)) && this.listaComanda.equals(o.listaComanda);
+
+    }
 }

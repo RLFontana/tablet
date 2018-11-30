@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,11 +51,12 @@ public class ClienteActivity extends AppCompatActivity {
             }
         });
         fab.setEnabled(false);
+        fab.setAlpha(0.1f);
 
         Mesa mesa = null;
         if(mesaID > -1 && !"".equals(mesaID)){
             for(Mesa mesaSearch : InMemoryDB.mesaDAO){
-                if(mesaID == mesaSearch.getCodigo()){
+                if(mesaID == mesaSearch.getNumero()){
                     mesa = mesaSearch;
                     break;
                 }
@@ -67,7 +67,7 @@ public class ClienteActivity extends AppCompatActivity {
         textMesa.setText(String.valueOf(mesa.getNumero())) ;
 
         ArrayList<ClienteAdapterObject> clientesArray = new ArrayList<>();
-        List<Cliente> clientes = mesa.getClientes();
+        ArrayList<Cliente> clientes = InMemoryDB.getClienteMesa(mesa);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             clientes.sort(new Comparator<Cliente>() {
@@ -93,8 +93,10 @@ public class ClienteActivity extends AppCompatActivity {
                         public void run() {
                             if(selectedItems != null && selectedItems.size() > 0){
                                 fab.setEnabled(true);
+                                fab.setAlpha(1.0f);
                             }else{
                                 fab.setEnabled(false);
+                                fab.setAlpha(0.1f);
                             }
                         }
                     });

@@ -25,6 +25,7 @@ public enum MainCardTipo {
                 return PEDIDO_CLIENTE;
             case 2:
                 return ITEM_PEDIDO_CONFIRMADO;
+            case 3:
             default:
                 return ITEM_PEDIDO_ENTREGA;
         }

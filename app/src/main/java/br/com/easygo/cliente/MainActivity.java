@@ -22,7 +22,6 @@ import br.com.easygo.cliente.activities.MesaActivity;
 import br.com.easygo.cliente.adapters.MainAdapter;
 import br.com.easygo.cliente.dao.InMemoryDB;
 import br.com.easygo.cliente.dialogs.SolicitacaoDialog;
-import br.com.easygo.cliente.firebase.FireBaseData;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.ItemPedido;
@@ -30,7 +29,6 @@ import br.com.easygo.cliente.model.MainCardAcao;
 import br.com.easygo.cliente.model.MainCardItem;
 import br.com.easygo.cliente.model.MainCardTipo;
 import br.com.easygo.cliente.model.Mesa;
-import br.com.easygo.cliente.model.Pedido;
 import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.Solicitacao;
 
@@ -53,22 +51,10 @@ public class MainActivity extends AppCompatActivity {
                     Bundle extra = new Bundle();
 
                     SolicitacaoDialog solicitacaoDialog = new SolicitacaoDialog();
-                    MainCardTipo tipo = ((FireBaseData)intent.getSerializableExtra("Data")).getType();
-                    if (tipo == MainCardTipo.SOLICITACAO_ATENDIMENTO) {
-                        extra.putBoolean("isSolicitacao", true);
-                        int codigoComanda = 1;
-                        InMemoryDB.insertSolicitacao(codigoComanda);
-                        refreshDataSet();
-                    }
-                    else if (tipo == MainCardTipo.ITEM_PEDIDO_ENTREGA){
-                        extra.putBoolean("isSolicitacao", false);
-                        int codigoItemPedido = 1;
-                        InMemoryDB.insertItemPedidoPronto(codigoItemPedido);
-                        refreshDataSet();
-                    }
+                    extra.putSerializable("FirebaseData", intent.getSerializableExtra("Data"));
                     solicitacaoDialog.setArguments(extra);
                     solicitacaoDialog.show(getSupportFragmentManager(), "tag");
-                    refreshDataSet();
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -98,6 +84,12 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("tablet");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        refreshDataSet();
+    }
+
     public void refreshDataSet(){
         fillList();
         adapter.setItens(itemPedidos);
@@ -111,26 +103,23 @@ public class MainActivity extends AppCompatActivity {
 
         //SOLICITACAO DE ATENDIMENTO
 
-        for (Solicitacao solicitacao: InMemoryDB.solitacaoDAO) {
-            if(solicitacao.getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()
-                    && solicitacao.isAtendida()){
-                Cliente c = solicitacao.getComanda().getCliente();
-                Mesa m =  solicitacao.getComanda().getMesaAtual();
+        for (Solicitacao solicitacao : InMemoryDB.currentGarcom.getListaSolicitacoes()){
+            Cliente c = solicitacao.getComanda().getCliente();
+            Mesa m = solicitacao.getMesa();
 
+            List<MainCardAcao> acoesSolicitacao = new ArrayList<>();
+            acoesSolicitacao.add(new MainCardAcao(0, "Atender", atenderSolicitacao_onClick(solicitacao)));
+            acoesSolicitacao.add(new MainCardAcao(1, "Cancelar", cancelarSolicitacao_onClick(solicitacao)));
 
-                List<MainCardAcao> acoesSolicitacao = new ArrayList<>();
-                acoesSolicitacao.add(new MainCardAcao(0, "Atender", atenderSolicitacao_onClick(solicitacao)));
-                acoesSolicitacao.add(new MainCardAcao(1, "Cancelar", cancelarSolicitacao_onClick(solicitacao)));
-
-                itemPedidos.add(new MainCardItem(
-                        "Mesa "+ m.getCodigo(),
-                        c.getNome(),
-                        "Solicitando atendimento",
-                        MainCardTipo.SOLICITACAO_ATENDIMENTO,
-                        acoesSolicitacao
-                        ));
-            }
+            itemPedidos.add(new MainCardItem(
+                    "Mesa "+ m.getNumero(),
+                    c.getNome(),
+                    "Solicitando atendimento",
+                    MainCardTipo.SOLICITACAO_ATENDIMENTO,
+                    acoesSolicitacao
+            ));
         }
+
         //FIM SOLICITACAO DE ATENDIMENTO
 
         //PEDIDO DO CLIENTE
@@ -138,13 +127,12 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        for (ItemPedido itemPedido : InMemoryDB.itemPedidoDAO){
+        for (ItemPedido itemPedido : InMemoryDB.currentGarcom.getListaItensPedidos()){
 
             //ITENS A ENTREGAR
-            if (itemPedido.getSituacao() == SituacaoItemPedido.PRONTO_PARA_ENTREGA &&
-                    itemPedido.getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()){
+            if (itemPedido.getSituacao() == SituacaoItemPedido.PRONTO_PARA_ENTREGA){
 
-                List<Comanda> comandas = itemPedido.getPedido().getComandas();
+                List<Comanda> comandas = itemPedido.getListaComandas();
                 String nomeCliente = "";
                 for(Comanda comanda : comandas){
                     nomeCliente += comanda.getCliente().getNome();
@@ -155,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                 acoesEntrega.add(new MainCardAcao(0, "Entregar", entregarItem_onClick(itemPedido)));
                 acoesEntrega.add(new MainCardAcao(1, "Cancelar", cancelarEntregaItem_onClick(itemPedido)));
                 itemPedidos.add(new MainCardItem(
-                        "Mesa "+ itemPedido.getMesa().getCodigo(),
+                        "Mesa "+ itemPedido.getMesa().getNumero(),
                         nomeCliente,
                         itemPedido.getProduto().getNome(),
                         MainCardTipo.ITEM_PEDIDO_ENTREGA,
@@ -167,8 +155,8 @@ public class MainActivity extends AppCompatActivity {
 
             //ITENS PEDIDOS PELO GARCOM ATUAL
             if (itemPedido.getSituacao() == SituacaoItemPedido.CONFIRMADO_PELO_GARCOM &&
-                    itemPedido.getPedido().getGarcom().getCodigo() == InMemoryDB.currentGarcom.getCodigo()){
-                List<Comanda> comandas = itemPedido.getPedido().getComandas();
+                    itemPedido.getPedido().getGarcom().getMatricula() == InMemoryDB.currentGarcom.getMatricula()){
+                List<Comanda> comandas = itemPedido.getListaComandas();
                 String nomeCliente = "";
                 for(Comanda comanda : comandas){
                     nomeCliente += comanda.getCliente().getNome();
@@ -212,8 +200,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
-                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.CANCELADO);
+                InMemoryDB.cancelarItemPedido(itemPedido);
             }
         };
     }
@@ -222,8 +209,7 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
-                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.CANCELADO);
+                InMemoryDB.cancelarItemPedido(itemPedido);
             }
         };
     }
@@ -232,17 +218,17 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int index = InMemoryDB.itemPedidoDAO.indexOf(itemPedido);
-                InMemoryDB.itemPedidoDAO.get(index).setSituacao(SituacaoItemPedido.ENTREGUE);
+                itemPedido.setSituacao(SituacaoItemPedido.ENTREGUE);
             }
         };
     }
+
 
     private View.OnClickListener cancelarSolicitacao_onClick(final Solicitacao solicitacao) {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InMemoryDB.solitacaoDAO.remove(solicitacao);
+                InMemoryDB.currentGarcom.getListaSolicitacoes().remove(solicitacao);
                 //Notificar usuario?
             }
         };
@@ -252,14 +238,10 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int index = InMemoryDB.solitacaoDAO.indexOf(solicitacao);
-                InMemoryDB.solitacaoDAO.get(index).setAtendida(true);
-                Pedido pedido = new Pedido(0, InMemoryDB.pedidoDAO.size(), InMemoryDB.currentGarcom);
-                InMemoryDB.pedidoDAO.add(pedido);
+                InMemoryDB.atenderSolicitacao(solicitacao);
             }
         };
     }
-
 
     @Override
     protected void onStart() {

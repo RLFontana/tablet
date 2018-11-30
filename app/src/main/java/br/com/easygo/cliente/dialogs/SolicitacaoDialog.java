@@ -10,10 +10,12 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 
 import br.com.easygo.cliente.R;
+import br.com.easygo.cliente.firebase.FireBaseData;
+import br.com.easygo.cliente.model.MainCardTipo;
 
 public class SolicitacaoDialog extends DialogFragment {
 
-    private boolean isSolicitacao;
+    private FireBaseData fireBaseData;
 
     public SolicitacaoDialog() {
         super();
@@ -22,10 +24,10 @@ public class SolicitacaoDialog extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        isSolicitacao = getArguments() != null ? getArguments().getBoolean("isSolicitacao") : false;
+        fireBaseData = getArguments() != null && getArguments().containsKey("FirebaseData") ? (FireBaseData)getArguments().getSerializable("FirebaseData") : null;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-
+        boolean isSolicitacao = fireBaseData.getType().equals(MainCardTipo.SOLICITACAO_ATENDIMENTO);
         builder.setView(layoutInflater.inflate(isSolicitacao ? R.layout.dialog_solicitacao : R.layout.dialog_notificacao, null))
                 .setPositiveButton(isSolicitacao ? R.string.atender : R.string.entregar, new DialogInterface.OnClickListener() {
                     @Override

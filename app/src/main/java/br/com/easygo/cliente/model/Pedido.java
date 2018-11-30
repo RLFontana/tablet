@@ -7,37 +7,30 @@ import java.util.List;
 
 import br.com.easygo.cliente.util.Format;
 
-public class Pedido {
+public class Pedido implements Comparable<Pedido>{
 
+    private int id;
     private int codigo;
-    private int numero;
     private Date dataInclusao;
     private Date dataConfirmacao;
     private Garcom garcom;
-    private Solicitacao solicitacao;
-    private List<Comanda> comandas;
     private List<ItemPedido> listaItemPedido;
 
-    public Pedido(int codigo, int numero, Date dataInclusao, Date dataConfirmacao, Garcom garcom, List<Comanda> comandas, List<ItemPedido> listaItemPedido) {
+    public Pedido(int id, int codigo, Date dataInclusao, Date dataConfirmacao, Garcom garcom, List<ItemPedido> listaItemPedido) {
+        this.id = id;
         this.codigo = codigo;
-        this.numero = numero;
         this.dataInclusao = dataInclusao;
         this.dataConfirmacao = dataConfirmacao;
         this.garcom = garcom;
         this.listaItemPedido = listaItemPedido;
     }
 
-
-    public Pedido(int codigo, int numero, Garcom garcom) {
-        this.codigo = codigo;
-        this.numero = numero;
-        this.dataInclusao = Calendar.getInstance().getTime();
-        this.garcom = garcom;
+    public int getId() {
+        return id;
     }
 
-    public Pedido(Garcom garcom, List<Comanda> comandas, ItemPedido pedido){
-        this(0, 0, new Date(System.currentTimeMillis()), null, garcom, comandas, new ArrayList<ItemPedido>());
-        this.listaItemPedido.add(pedido);
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getCodigo() {
@@ -46,14 +39,6 @@ public class Pedido {
 
     public void setCodigo(int codigo) {
         this.codigo = codigo;
-    }
-
-    public int getNumero() {
-        return numero;
-    }
-
-    public void setNumero(int numero) {
-        this.numero = numero;
     }
 
     public Date getDataInclusao() {
@@ -80,22 +65,6 @@ public class Pedido {
         this.garcom = garcom;
     }
 
-    public Solicitacao getSolicitacao() {
-        return solicitacao;
-    }
-
-    public void setSolicitacao(Solicitacao solicitacao) {
-        this.solicitacao = solicitacao;
-    }
-
-    public List<Comanda> getComandas() {
-        return comandas;
-    }
-
-    public void setComandas(List<Comanda> comandas) {
-        this.comandas = comandas;
-    }
-
     public List<ItemPedido> getListaItemPedido() {
         return listaItemPedido;
     }
@@ -108,7 +77,7 @@ public class Pedido {
     public String toString() {
         String retorno = "[Pedido]" + "\n" +
                 "codigo: " + codigo + "\n" +
-                "numero: " + numero + "\n" +
+                "id: " + id + "\n" +
                 "dataInclusao: " + Format.date(dataInclusao) + "\n" +
                 "dataConfirmacao: " + Format.date(dataConfirmacao) + "\n" +
                 garcom.toString() + "\n" +
@@ -120,5 +89,22 @@ public class Pedido {
             stringBuilder.append(itemPedido.toString());
         }
         return stringBuilder.toString();
+    }
+
+    @Override
+    public int compareTo(Pedido o) {
+        if (this.codigo == o.codigo) {
+            return 0;
+        } else if (this.codigo > o.codigo) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Pedido o = (Pedido) obj;
+        return this.id == o.id && this.codigo == o.codigo && ((this.dataInclusao == null && o.dataInclusao == null) || this.dataInclusao.equals(o.dataInclusao)) && ((this.dataConfirmacao == null && o.dataConfirmacao == null) || this.dataConfirmacao.equals(o.dataConfirmacao)) && this.garcom.equals(o.garcom) && this.listaItemPedido.equals(o.listaItemPedido);
     }
 }

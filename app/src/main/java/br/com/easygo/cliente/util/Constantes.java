@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class Constantes {
 
-    public enum Urls {
+    public enum Url {
         CLIENTE(""),
         GARCOM(""),
         COMANDA(""),
@@ -16,7 +16,7 @@ public class Constantes {
 
         String uri;
 
-        Urls(String uri){
+        Url(String uri){
             this.uri = uri;
         }
 
@@ -25,24 +25,34 @@ public class Constantes {
         }
     }
 
-    public enum TipoDialog {
-        SOLICITACAO_CLIENTE(true),
-        NOTIFICACAO_COZINHA(false);
-
-        boolean solicitacao;
-
-        TipoDialog(boolean solicitacao){
-            this.solicitacao = solicitacao;
-        }
-
-        public boolean isSolicitacao() {
-            return solicitacao;
-        }
-    }
-
     public final static Map<String, String> defaultHeader() {
         Map<String, String> retorno =  new HashMap<String, String>();
         //retorno.put("key", "value");
         return retorno;
+    }
+
+    public enum TipoCozinha{
+        COZINHA(0),
+        BAR(1);
+
+        int codigo;
+
+        TipoCozinha(int codigo){
+            this.codigo = codigo;
+        }
+
+        public int getCodigo(){
+            return this.codigo;
+        }
+
+        public static TipoCozinha valueOf(int codigo){
+            switch (codigo){
+                case 0:
+                    return COZINHA;
+                case 1:
+                default:
+                    return BAR;
+            }
+        }
     }
 }
