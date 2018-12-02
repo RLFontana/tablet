@@ -68,7 +68,7 @@ public class SubPedidoAdapterObject {
         int pos = 0;
         for(SubPedidoProduto subProduto : produtos){
             if(subProduto.getProduto().getCodigo() == produto.getCodigo()){
-                subProduto.setQuantidade(subProduto.getQuantidade() + quantidade);
+                subProduto.setQuantidade(subProduto.getQuantidade() - quantidade);
                 if(subProduto.getQuantidade() <= 0){
                     idxToRemove = pos;
                 }

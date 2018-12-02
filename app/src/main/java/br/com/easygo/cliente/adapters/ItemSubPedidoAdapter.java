@@ -17,7 +17,7 @@ import br.com.easygo.cliente.model.Produto;
 public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(Produto item);
+        void onItemClick(Produto itemPos);
     }
 
     private final OnItemClickListener listener;
@@ -27,7 +27,8 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
     private final Context context;
     private final List<SubPedidoAdapterObject.SubPedidoProduto> produtos;
 
-    public ItemSubPedidoAdapter(Context context, List<SubPedidoAdapterObject.SubPedidoProduto> produtos, OnItemClickListener onClick) {
+    public ItemSubPedidoAdapter(Context context, List<SubPedidoAdapterObject.SubPedidoProduto> produtos,
+                                OnItemClickListener onClick) {
         this.context = context;
         this.produtos = produtos;
         this.listener = onClick;
@@ -50,6 +51,15 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
 
             viewHolder.produtoName.setText(item.getProduto().getNome());
             viewHolder.produtoQuantidade.setText(String.valueOf(item.getQuantidade()));
+
+            if(listener != null){
+                viewHolder.btnProdutoRemove.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        listener.onItemClick(item.getProduto());
+                    }
+                });
+            }
         }
     }
 
@@ -81,11 +91,13 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
 static class SubPedidoProdutoViewHolder extends RecyclerView.ViewHolder {
     TextView produtoName;
     TextView produtoQuantidade;
+    ImageView btnProdutoRemove;
 
     public SubPedidoProdutoViewHolder(ViewGroup parent) {
         super(LayoutInflater.from(parent.getContext()).inflate(R.layout.rv_item_subpedido_item, parent, false));
         produtoName = itemView.findViewById(R.id.item_subpedido_nome);
         produtoQuantidade = itemView.findViewById(R.id.item_subpedido_qtd);
+        btnProdutoRemove = itemView.findViewById(R.id.btn_produto_remove);
     }
 }
 

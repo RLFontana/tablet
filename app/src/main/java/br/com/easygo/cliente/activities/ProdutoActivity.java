@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import br.com.easygo.cliente.R;
+import br.com.easygo.cliente.adapters.ItemSubPedidoAdapter;
 import br.com.easygo.cliente.adapters.ProdutoAdapter;
 import br.com.easygo.cliente.adapters.ProdutoDetalheAdapter;
 import br.com.easygo.cliente.adapters.SubPedidoAdapter;
@@ -69,6 +70,19 @@ public class ProdutoActivity extends AppCompatActivity {
             }
         };
 
+        ItemSubPedidoAdapter.OnItemClickListener onRemoveClick = new ItemSubPedidoAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final Produto item) {
+                subPedidos.get(0).removeProduto(item, 1);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        subPedidoAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        };
 
         RecyclerView recyclerView = findViewById(R.id.rv_produtos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -97,7 +111,7 @@ public class ProdutoActivity extends AppCompatActivity {
             }
         };
         recyclerViewSubpedido.setLayoutManager(mLayoutManager);
-        subPedidoAdapter = new SubPedidoAdapter(this, subPedidos, null);
+        subPedidoAdapter = new SubPedidoAdapter(this, subPedidos, null, onRemoveClick);
         recyclerViewSubpedido.setAdapter(subPedidoAdapter);
 
     }

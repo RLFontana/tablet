@@ -25,16 +25,19 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
     }
 
     private final OnItemClickListener listener;
+    private final ItemSubPedidoAdapter.OnItemClickListener listenerSubItem;
 
     private static final int EMPTY_VIEW = 10;
 
     private final Context context;
     private final List<SubPedidoAdapterObject> pedidos;
 
-    public SubPedidoAdapter(Context context, List<SubPedidoAdapterObject> pedidos, OnItemClickListener onClick) {
+    public SubPedidoAdapter(Context context, List<SubPedidoAdapterObject> pedidos,
+                            OnItemClickListener onClick, ItemSubPedidoAdapter.OnItemClickListener onClickSubItem) {
         this.context = context;
         this.pedidos = pedidos;
         this.listener = onClick;
+        this.listenerSubItem = onClickSubItem;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
             }
 
             viewHolder.subpedidoLista.setLayoutManager(new LinearLayoutManager(context));
-            ItemSubPedidoAdapter itemsPedido = new ItemSubPedidoAdapter(context, item.getProdutos(), null);
+            ItemSubPedidoAdapter itemsPedido = new ItemSubPedidoAdapter(context, item.getProdutos(), listenerSubItem);
             viewHolder.subpedidoLista.setAdapter(itemsPedido);
 
             if(listener != null){

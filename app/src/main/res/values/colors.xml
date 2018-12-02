@@ -11,4 +11,5 @@
     <color name="pedido_cliente">#42A5F5</color>
     <color name="item_pedido_confirmado">#FFE082</color>
     <color name="item_pedido_entrega">#81C784</color>
+    <color name="red_alizarin">#e74c3c</color>
 </resources>

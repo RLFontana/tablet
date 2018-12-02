@@ -49,14 +49,7 @@
                     android:paddingLeft="4dp"/>
 
             </LinearLayout>
-
-
-
         </RelativeLayout>
-
-
-
-
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
