@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import br.com.easygo.cliente.firebase.FireBaseData;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.Garcom;
@@ -15,6 +16,7 @@ import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.SituacaoMesa;
 import br.com.easygo.cliente.model.Solicitacao;
 import br.com.easygo.cliente.model.TipoProduto;
+import br.com.easygo.cliente.util.Constantes;
 
 /**
  * Created by Vinícius Carvalho on 11/24/2018.
@@ -147,17 +149,17 @@ public class InMemoryDB {
         itemPedido.setSituacao(SituacaoItemPedido.ENTREGA_A_CAMINHO);
     }
 
-    public static ArrayList<Cliente> getClienteMesa(Mesa mesa){
-        ArrayList<Cliente> retorno = new ArrayList<>();
+    public static ArrayList<Comanda> getComandaMesa(Mesa mesa){
+        ArrayList<Comanda> retorno = new ArrayList<>();
         for(ItemPedido itemPedido : itemPedidoDAO){
             if(itemPedido.getMesa().equals(mesa)){
                 for(Comanda comanda : itemPedido.getListaComandas()){
-                    retorno.add(comanda.getCliente());
+                    retorno.add(comanda);
                 }
             }
         }
         if(retorno.size() == 0){
-            return (ArrayList<Cliente>) clienteDAO;
+            return (ArrayList<Comanda>) comandaDAO;
         }
         return retorno;
     }
@@ -168,6 +170,63 @@ public class InMemoryDB {
 
     private static int getIndexNextItemPedido(){
         return pedidoDAO.size() > 0 ? pedidoDAO.get(pedidoDAO.size() - 1).getListaItemPedido().get(pedidoDAO.get(pedidoDAO.size() - 1).getListaItemPedido().size() - 1).getId() + 1 : 0;
+    }
+
+    public static Mesa getMesa(FireBaseData firebaseData){
+        switch (firebaseData.getType()){
+            case SOLICITACAO_ATENDIMENTO:
+                int idMesa = firebaseData.getOrigin();
+                for (Mesa mesa : mesaDAO){
+                    if (mesa.getId() == idMesa){
+                        return mesa;
+                    }
+                }
+                break;
+            case ITEM_PEDIDO_ENTREGA:
+                int idItemPedido = firebaseData.getValue();
+                for (ItemPedido itemPedido : itemPedidoDAO){
+                    if(itemPedido.getId() == idItemPedido){
+                        return itemPedido.getMesa();
+                    }
+                }
+                break;
+        }
+        return null;
+    }
+
+    public static Cliente getCliente(FireBaseData fireBaseData){
+        switch (fireBaseData.getType()){
+            case SOLICITACAO_ATENDIMENTO:
+                int idCliente = fireBaseData.getValue();
+                for (Cliente cliente :clienteDAO){
+                    if(cliente.getId() == idCliente){
+                        return cliente;
+                    }
+                }
+                break;
+            case ITEM_PEDIDO_ENTREGA:
+                int idItemPedido = fireBaseData.getValue();
+                for (ItemPedido itemPedido : itemPedidoDAO){
+                    if (itemPedido.getId() == idItemPedido){
+                        return itemPedido.getListaComandas().get(0).getCliente();
+                    }
+                }
+                break;
+        }
+        return null;
+    }
+
+    public static ItemPedido getItemPedido(FireBaseData fireBaseData){
+        for (ItemPedido itemPedido : itemPedidoDAO){
+            if (itemPedido.getId() == fireBaseData.getValue()){
+                return itemPedido;
+            }
+        }
+        return null;
+    }
+
+    public static String getNomeOrigem(FireBaseData fireBaseData){
+        return Constantes.TipoCozinha.valueOf(fireBaseData.getOrigin()).name();
     }
 
 }

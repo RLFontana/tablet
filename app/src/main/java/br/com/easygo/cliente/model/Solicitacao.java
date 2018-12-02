@@ -1,8 +1,9 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Solicitacao implements Comparable<Solicitacao>{
+public class Solicitacao implements Comparable<Solicitacao>, Serializable {
 
     private Comanda comanda;
     private Mesa mesa;

@@ -1,5 +1,6 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,30 +9,30 @@ import java.util.List;
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.util.Format;
 
-public class Cliente implements Comparable<Cliente>{
+public class Cliente implements Comparable<Cliente>, Serializable {
 
-    private int codigo;
+    private int id;
     private String nome;
     private String telefone;
     private Date dataNascimento;
     private String foto;
     private List<Comanda> listaComanda;
 
-    public Cliente(int codigo, String nome, String telefone) {
-        this.codigo = codigo;
+    public Cliente(int id, String nome, String telefone) {
+        this.id = id;
         this.nome = nome;
         this.telefone = telefone;
     }
 
-    public Cliente(int codigo, String nome, String telefone, String foto) {
-        this.codigo = codigo;
+    public Cliente(int id, String nome, String telefone, String foto) {
+        this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.foto = foto;
     }
 
-    public Cliente(int codigo, String nome, String telefone, Date dataNascimento, String foto, List<Comanda> listaComanda) {
-        this.codigo = codigo;
+    public Cliente(int id, String nome, String telefone, Date dataNascimento, String foto, List<Comanda> listaComanda) {
+        this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.dataNascimento = dataNascimento;
@@ -43,12 +44,12 @@ public class Cliente implements Comparable<Cliente>{
         this(0, nome, telefone, null, "", new ArrayList<Comanda>());
     }
 
-    public int getCodigo() {
-        return codigo;
+    public int getId() {
+        return id;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -105,7 +106,7 @@ public class Cliente implements Comparable<Cliente>{
     @Override
     public String toString() {
         String retorno = "[Cliente]" + "\n" +
-                "codigo: " + codigo + "\n" +
+                "id: " + id + "\n" +
                 "nome: " + nome + "\n" +
                 "telefone: " + telefone + "\n" +
                 "dataNascimento" + Format.date(dataNascimento) + "\n" +
@@ -113,12 +114,13 @@ public class Cliente implements Comparable<Cliente>{
                 "[Lista]" + "\n";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(retorno);
-        for (Comanda comanda : listaComanda){
-            stringBuilder.append(comanda.toString());
+        if(listaComanda != null && !listaComanda.isEmpty()) {
+            for (Comanda comanda : listaComanda) {
+                stringBuilder.append(comanda.toString());
+            }
         }
         return stringBuilder.toString();
     }
-
     @Override
     public int compareTo(Cliente o) {
         return this.nome.compareTo(o.nome);
@@ -127,7 +129,7 @@ public class Cliente implements Comparable<Cliente>{
     @Override
     public boolean equals(Object obj) {
         Cliente o = (Cliente) obj;
-        return this.codigo == o.codigo && this.nome.equals(o.nome) && this.telefone.equals(o.telefone) && ((this.dataNascimento == null && o.dataNascimento == null) || this.dataNascimento.equals(o.dataNascimento)) && ((this.foto == null && o.foto == null) || this.foto.equals(o.foto)) && this.listaComanda.equals(o.listaComanda);
+        return this.id == o.id && this.nome.equals(o.nome) && this.telefone.equals(o.telefone) && ((this.dataNascimento == null && o.dataNascimento == null) || this.dataNascimento.equals(o.dataNascimento)) && ((this.foto == null && o.foto == null) || this.foto.equals(o.foto)) && ((this.listaComanda == null && o.listaComanda == null) || this.listaComanda.equals(o.listaComanda));
 
     }
 }

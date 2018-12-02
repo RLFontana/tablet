@@ -1,12 +1,13 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import br.com.easygo.cliente.util.Format;
 
-public class ItemPedido implements Comparable<ItemPedido> {
+public class ItemPedido implements Comparable<ItemPedido>, Serializable {
 
     private int id;
     private int quantidade;

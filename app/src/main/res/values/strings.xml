@@ -1,13 +1,10 @@
 <resources>
     <string name="app_name">EasyGO</string>
     <string name="adicionar_pedido">Adicionar Pedido</string>
-    <string name="cliente_chamando">Atender Mesa 2</string>
     <string name="tv_novo_pedido">Solicitação</string>
-    <string name="nome_cliente">Rodrigo na Mesa 2 está solicitando atendimento</string>
     <string name="atender">atender agora</string>
     <string name="cancelar">estou ocupado</string>
     <string name="tv_pedido_pronto">Notificação</string>
-    <string name="pedido_cozinha">O pedido de porção de batata frita com cheddar e bacon de Andreia está pronto para a entrega na mesa 2.</string>
     <string name="entregar">entregar</string>
     <string name="title_activity_mesa">Mesa</string>
     <string name="text_escolher_mesa">Escolha a mesa</string>

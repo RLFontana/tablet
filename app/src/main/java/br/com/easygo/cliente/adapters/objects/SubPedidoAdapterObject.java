@@ -8,26 +8,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 import br.com.easygo.cliente.model.Cliente;
+import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.Produto;
 
 public class SubPedidoAdapterObject {
     private Mesa mesa;
-    private List<Cliente> clientes;
+    private List<Comanda> comandas;
     private List<SubPedidoProduto> produtos;
 
-    public SubPedidoAdapterObject(Mesa mesa, List<Cliente> clientes) {
+    public SubPedidoAdapterObject(Mesa mesa, List<Comanda> comandas) {
         this.mesa = mesa;
-        this.clientes = clientes;
+        this.comandas = comandas;
         this.produtos = new LinkedList<>();
     }
 
-    public List<Cliente> getClientes() {
-        return clientes;
+    public List<Comanda> getComandas() {
+        return comandas;
     }
 
-    public void setClientes(List<Cliente> clientes) {
-        this.clientes = clientes;
+    public void setComandas(List<Comanda> comandas) {
+        this.comandas = comandas;
     }
 
     public List<SubPedidoProduto> getProdutos() {

@@ -1,10 +1,11 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import br.com.easygo.cliente.util.Format;
 
-public class Produto implements Comparable<Produto>{
+public class Produto implements Comparable<Produto>, Serializable {
     private int id;
     private int codigo;
     private String nome;

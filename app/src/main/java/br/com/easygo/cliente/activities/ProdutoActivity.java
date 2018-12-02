@@ -1,7 +1,6 @@
 package br.com.easygo.cliente.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,8 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,60 +20,29 @@ import br.com.easygo.cliente.adapters.SubPedidoAdapter;
 import br.com.easygo.cliente.adapters.objects.ProdutoAdapterObject;
 import br.com.easygo.cliente.adapters.objects.SubPedidoAdapterObject;
 import br.com.easygo.cliente.dao.InMemoryDB;
-import br.com.easygo.cliente.model.Cliente;
-import br.com.easygo.cliente.model.Mesa;
+import br.com.easygo.cliente.model.BundlePedidos;
+import br.com.easygo.cliente.model.ItemPedido;
 import br.com.easygo.cliente.model.Produto;
+import br.com.easygo.cliente.model.SituacaoItemPedido;
 
 public class ProdutoActivity extends AppCompatActivity {
 
     List<SubPedidoAdapterObject> subPedidos = new LinkedList<>();
     SubPedidoAdapter subPedidoAdapter;
+    private BundlePedidos prePedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_produto);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        Intent intent = getIntent();
+        prePedidos = (BundlePedidos) intent.getSerializableExtra("prePedidos");
 
-        Intent it = getIntent();
-        final int mesaID = it.getIntExtra("MESA_ID", -1);
-        final int[] clienteID = it.getIntArrayExtra("CLIENTE_ID");
-
-        Mesa mesa = null;
-        if(mesaID > -1 && !"".equals(mesaID)){
-            for(Mesa mesaSearch : InMemoryDB.mesaDAO){
-                if(mesaID == mesaSearch.getNumero()){
-                    mesa = mesaSearch;
-                    break;
-                }
-            }
-        }
-
-        ArrayList<Cliente> clientes = InMemoryDB.getClienteMesa(mesa);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            clientes.sort(new Comparator<Cliente>() {
-                @Override
-                public int compare(Cliente cliente, Cliente t1) {
-                    String clienteName1 = cliente.getNome().toUpperCase();
-                    String clienteName2 = t1.getNome().toUpperCase();
-                    return clienteName1.compareTo(clienteName2);
-                }
-            });
-        }
-
-
-        List<Integer> clientesSelecionados = new LinkedList<>();
-        for(int cli : clienteID){
-            clientesSelecionados.add(cli);
-        }
-        List<Cliente> clientesPedido = new LinkedList<>();
-        for(Cliente cliente : clientes){
-            if(clientesSelecionados.contains(cliente.getCodigo())){
-                clientesPedido.add(cliente);
-            }
-        }
+        //ArrayList<Comanda> comandas = InMemoryDB.getComandaMesa(prePedidos.getMesaAtual());
+        //List<Integer> clientesSelecionados = new LinkedList<>();
+        //List<Cliente> clientesPedido = new LinkedList<>();
 
         List<Produto> produtos = InMemoryDB.produtoDAO;
         List<ProdutoAdapterObject> listaProduto = new LinkedList<>();
@@ -110,7 +76,7 @@ public class ProdutoActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -122,7 +88,7 @@ public class ProdutoActivity extends AppCompatActivity {
         fab.setAlpha(0.1f);
 
 
-        subPedidos.add(new SubPedidoAdapterObject(mesa, clientesPedido));
+        subPedidos.add(new SubPedidoAdapterObject(prePedidos.getMesaAtual(), prePedidos.getComandasPedidoAtual()));
         RecyclerView recyclerViewSubpedido = findViewById(R.id.rv_subpedido);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this) {
             @Override

@@ -18,11 +18,13 @@ import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.MesaAdapter;
 import br.com.easygo.cliente.adapters.objects.MesaAdapterObject;
 import br.com.easygo.cliente.dao.InMemoryDB;
+import br.com.easygo.cliente.model.BundlePedidos;
 import br.com.easygo.cliente.model.Mesa;
+import br.com.easygo.cliente.model.PrePedido;
 
 public class MesaActivity extends AppCompatActivity {
 
-    private List<SelectMesa> mesas;
+    private BundlePedidos prePedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,15 @@ public class MesaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mesa);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        Intent intent = getIntent();
+        BundlePedidos pedidos = (BundlePedidos) intent.getSerializableExtra("prePedidos");
+        if (prePedidos == null){
+            prePedidos = new BundlePedidos(InMemoryDB.currentGarcom);
+        }
+        if (pedidos != null){
+            prePedidos = pedidos;
+        }
 
         ArrayList<MesaAdapterObject> mesasArray = new ArrayList<>();
         for(Mesa mesa : InMemoryDB.mesaDAO){
@@ -39,9 +50,18 @@ public class MesaActivity extends AppCompatActivity {
         MesaAdapter.OnItemClickListener onClick = new MesaAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(MesaAdapterObject item) {
-                Intent it = new Intent(MesaActivity.this, ClienteActivity.class);
-                it.putExtra("MESA_ID", item.getMesa().getNumero());
-                startActivity(it);
+                if (prePedidos.isReverse()){
+                    prePedidos.getPrePedidos().get(prePedidos.getPrePedidos().size() - 1).setMesa(item.getMesa());
+                } else {
+                    PrePedido prePedido = new PrePedido();
+                    prePedido.setMesa(item.getMesa());
+                    prePedidos.setPrePedido(prePedido);
+                }
+                prePedidos.setNormal();
+                Intent clienteIntent = new Intent(MesaActivity.this, ClienteActivity.class);
+                clienteIntent.putExtra("prePedidos", prePedidos);
+                startActivity(clienteIntent);
+                finish();
             }
         };
 
@@ -51,26 +71,20 @@ public class MesaActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-
-    public class SelectMesa{
-        private Mesa mesa;
-        private boolean selection;
-
-        public Mesa getMesa() {
-            return mesa;
+    @Override
+    public void onBackPressed() {
+        if (!prePedidos.isNew()) {
+            if (prePedidos.isReverse()) {
+                prePedidos.setNormal();
+                Intent clienteIntent = new Intent(MesaActivity.this, ClienteActivity.class);
+                clienteIntent.putExtra("prePedidos", prePedidos);
+                startActivity(clienteIntent);
+            } else if (prePedidos.getPrePedidos().size() != 0) {
+                Intent produtoIntent = new Intent(MesaActivity.this, ProdutoActivity.class);
+                produtoIntent.putExtra("prePedidos", prePedidos);
+                startActivity(produtoIntent);
+            }
         }
-
-        public void setMesa(Mesa mesa) {
-            this.mesa = mesa;
-        }
-
-        public boolean isSelection() {
-            return selection;
-        }
-
-        public void setSelection(boolean selection) {
-            this.selection = selection;
-        }
+        finish();
     }
-
 }

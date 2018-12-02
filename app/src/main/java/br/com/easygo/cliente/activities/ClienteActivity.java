@@ -1,7 +1,6 @@
 package br.com.easygo.cliente.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -13,38 +12,39 @@ import android.view.View;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Collections;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.ClienteAdapter;
 import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 import br.com.easygo.cliente.dao.InMemoryDB;
+import br.com.easygo.cliente.model.BundlePedidos;
 import br.com.easygo.cliente.model.Cliente;
-import br.com.easygo.cliente.model.Mesa;
+import br.com.easygo.cliente.model.Comanda;
 
 public class ClienteActivity extends AppCompatActivity {
 
     ClienteAdapter adapter;
+    private BundlePedidos prePedidos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cliente);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent it = getIntent();
-        final int mesaID = it.getIntExtra("MESA_ID", -1);
+        Intent intent = getIntent();
+        prePedidos = (BundlePedidos) intent.getSerializableExtra("prePedidos");
 
 
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_cliente);
+        final FloatingActionButton fab = findViewById(R.id.fab_cliente);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent it = new Intent(ClienteActivity.this, ProdutoActivity.class);
-                it.putExtra("MESA_ID", mesaID);
-                it.putExtra("CLIENTE_ID", adapter.getSelecionados());
-                startActivity(it);
+                Intent produtoIntent = new Intent(ClienteActivity.this, ProdutoActivity.class);
+                produtoIntent.putExtra("prePedidos", prePedidos);
+                startActivity(produtoIntent);
+                finish();
 
                 //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 //        .setAction("Action", null).show();
@@ -53,48 +53,34 @@ public class ClienteActivity extends AppCompatActivity {
         fab.setEnabled(false);
         fab.setAlpha(0.1f);
 
-        Mesa mesa = null;
-        if(mesaID > -1 && !"".equals(mesaID)){
-            for(Mesa mesaSearch : InMemoryDB.mesaDAO){
-                if(mesaID == mesaSearch.getNumero()){
-                    mesa = mesaSearch;
-                    break;
-                }
-            }
-        }
-
         TextView textMesa = findViewById(R.id.txt_mesa_cliente);
-        textMesa.setText(String.valueOf(mesa.getNumero())) ;
+        textMesa.setText(String.valueOf(prePedidos.getMesaAtual().getNumero())) ;
 
         ArrayList<ClienteAdapterObject> clientesArray = new ArrayList<>();
-        ArrayList<Cliente> clientes = InMemoryDB.getClienteMesa(mesa);
+        ArrayList<Comanda> comandas = InMemoryDB.getComandaMesa(prePedidos.getMesaAtual());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            clientes.sort(new Comparator<Cliente>() {
-                @Override
-                public int compare(Cliente cliente, Cliente t1) {
-                    String clienteName1 = cliente.getNome().toUpperCase();
-                    String clienteName2 = t1.getNome().toUpperCase();
-                    return clienteName1.compareTo(clienteName2);
-                }
-            });
-        }
+        Collections.sort(comandas);
 
-        for(Cliente cliente : clientes){
-            clientesArray.add(new ClienteAdapterObject(cliente));
+        for(Comanda comanda : comandas){
+            clientesArray.add(new ClienteAdapterObject(comanda));
         }
 
         ClienteAdapter.OnItemClickListener onClick = new ClienteAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(ClienteAdapterObject item, final List<Integer> selectedItems) {
+            public void onItemClick(final ClienteAdapterObject item) {
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(selectedItems != null && selectedItems.size() > 0){
+                            if (prePedidos.getComandasPedidoAtual().contains(item.getComanda())) {
+                                prePedidos.getComandasPedidoAtual().remove(item.getComanda());
+                            } else {
+                                prePedidos.getComandasPedidoAtual().add(item.getComanda());
+                            }
+                            if(prePedidos.getComandasPedidoAtual() != null && !prePedidos.getComandasPedidoAtual().isEmpty()){
                                 fab.setEnabled(true);
                                 fab.setAlpha(1.0f);
-                            }else{
+                            }else {
                                 fab.setEnabled(false);
                                 fab.setAlpha(0.1f);
                             }
@@ -112,4 +98,12 @@ public class ClienteActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        prePedidos.setReverse();
+        Intent produtoIntent = new Intent(ClienteActivity.this, MesaActivity.class);
+        produtoIntent.putExtra("prePedidos", prePedidos);
+        startActivity(produtoIntent);
+        finish();
+    }
 }

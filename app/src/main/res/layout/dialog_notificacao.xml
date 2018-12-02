@@ -37,9 +37,9 @@
         android:paddingRight="20dp">
 
         <TextView
+            android:id="@+id/tv_notificacao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/pedido_cozinha"
             android:textAlignment="center"
             android:textSize="18sp"/>
     </LinearLayout>

@@ -21,7 +21,7 @@ import br.com.easygo.cliente.adapters.objects.ClienteAdapterObject;
 public class ClienteAdapter  extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(ClienteAdapterObject item, List<Integer> selectedItems);
+        void onItemClick(ClienteAdapterObject item);
     }
 
     private final OnItemClickListener listener;
@@ -30,7 +30,6 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
 
     private final Context context;
     private final List<ClienteAdapterObject> clientes;
-    private List<Integer> selectedItems = new LinkedList<>();
 
     public ClienteAdapter(Context context, List<ClienteAdapterObject> clientes) {
         this.context = context;
@@ -82,13 +81,8 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
                     @Override
                     public void onClick(View v) {
                         item.setSelected(!item.isSelected());
-                        if(item.isSelected()){
-                            selectedItems.add(item.getCliente().getCodigo());
-                        }else if(selectedItems.contains(item.getCliente().getCodigo())){
-                            selectedItems.remove(new Integer(item.getCliente().getCodigo()));
-                        }
                         notifyItemChanged(position);
-                        listener.onItemClick(item, selectedItems);
+                        listener.onItemClick(item);
                     }
                 });
             }
@@ -118,14 +112,6 @@ public class ClienteAdapter  extends RecyclerView.Adapter{
 
     public ClienteAdapterObject getItemByPosition(int position){
         return clientes == null ? null : clientes.get(position);
-    }
-
-    public int[] getSelecionados(){
-        int[] selecionados = new int[selectedItems.size()];
-        for(int i=0; i< selectedItems.size(); i++){
-            selecionados[i] = selectedItems.get(i).intValue();
-        }
-        return selecionados;
     }
 
     static class ClienteViewHolder extends RecyclerView.ViewHolder {

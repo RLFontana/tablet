@@ -52,7 +52,7 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
             final SubPedidoViewHolder viewHolder = (SubPedidoViewHolder) holder;
             final SubPedidoAdapterObject item = pedidos.get(position);
 
-            viewHolder.mesaName.setText("Mesa " + item.getMesa().getId());
+            viewHolder.mesaName.setText("Mesa " + item.getMesa().getNumero());
             viewHolder.valorTotal.setText("R$ " + String.format("%.2f", item.getValorTotal()));
 
             if(item.getValorTotal() > 0){
@@ -62,7 +62,7 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
             }
 
             viewHolder.clienteLista.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-            ClienteViewAdapter adapter = new ClienteViewAdapter(context, item.getClientes());
+            ClienteViewAdapter adapter = new ClienteViewAdapter(context, item.getComandas());
             viewHolder.clienteLista.setAdapter(adapter);
 
             if(item.getProdutos().size() > 0){

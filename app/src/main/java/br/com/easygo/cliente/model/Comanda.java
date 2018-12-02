@@ -1,5 +1,6 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,7 +8,7 @@ import java.util.List;
 
 import br.com.easygo.cliente.util.Format;
 
-public class Comanda implements Comparable<Comanda>{
+public class Comanda implements Comparable<Comanda>, Serializable {
 
     private int codigo;
     private int id;
@@ -90,14 +91,16 @@ public class Comanda implements Comparable<Comanda>{
         String retorno = "[Comanda]" + "\n"+
                 "codigo: " + codigo + "\n" +
                 "id: " + id + "\n" +
-                "dataAbertura: " + Format.date(dataAbertura) + "\n" +
-                "dataFechamento: " + Format.date(dataFechamento) + "\n" +
+                dataAbertura != null ? ("dataAbertura: " + Format.date(dataAbertura) + "\n") : "" +
+                dataFechamento != null ? ("dataFechamento: " + Format.date(dataFechamento) + "\n") : "" +
                 cliente.toString() +
                 "[Lista]" + "\n";
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(retorno);
-        for (ItemPedido itemPedido: listaItemPedido){
-            stringBuilder.append(itemPedido.toString());
+        if(listaItemPedido != null && !listaItemPedido.isEmpty()) {
+            for (ItemPedido itemPedido : listaItemPedido) {
+                stringBuilder.append(itemPedido.toString());
+            }
         }
         return stringBuilder.toString();
     }
@@ -116,6 +119,6 @@ public class Comanda implements Comparable<Comanda>{
     @Override
     public boolean equals(Object obj) {
         Comanda o = (Comanda) obj;
-        return this.codigo == o.codigo && this.id == o.id && ((this.dataAbertura == null && o.dataAbertura == null) || this.dataAbertura.equals(o.dataAbertura)) && ((this.dataFechamento == null && o.dataFechamento == null) || this.dataFechamento.equals(o.dataFechamento)) && this.cliente.equals(o.cliente) && this.listaItemPedido.equals(o.listaItemPedido);
+        return this.codigo == o.codigo && this.id == o.id && ((this.dataAbertura == null && o.dataAbertura == null) || this.dataAbertura.equals(o.dataAbertura)) && ((this.dataFechamento == null && o.dataFechamento == null) || this.dataFechamento.equals(o.dataFechamento)) && this.cliente.equals(o.cliente) && ((this.listaItemPedido == null && o.listaItemPedido == null) || this.listaItemPedido.equals(o.listaItemPedido));
     }
 }

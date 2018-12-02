@@ -1,11 +1,12 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import br.com.easygo.cliente.dao.InMemoryDB;
 
-public class Mesa implements Comparable<Mesa>{
+public class Mesa implements Comparable<Mesa>, Serializable {
 
     private int id;
     private int numero;

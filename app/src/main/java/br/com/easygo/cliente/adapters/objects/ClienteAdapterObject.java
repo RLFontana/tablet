@@ -1,21 +1,22 @@
 package br.com.easygo.cliente.adapters.objects;
 
 import br.com.easygo.cliente.model.Cliente;
+import br.com.easygo.cliente.model.Comanda;
 
 public class ClienteAdapterObject {
-    private Cliente cliente;
+    private Comanda comanda;
     private boolean selected;
 
-    public ClienteAdapterObject(Cliente cliente) {
-        this.cliente = cliente;
+    public ClienteAdapterObject(Comanda comanda) {
+        this.comanda = comanda;
     }
 
-    public Cliente getCliente() {
-        return cliente;
+    public Comanda getComanda() {
+        return comanda;
     }
 
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
+    public void setComanda(Comanda comanda) {
+        this.comanda = comanda;
     }
 
     public boolean isSelected() {
@@ -24,5 +25,9 @@ public class ClienteAdapterObject {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public Cliente getCliente(){
+        return comanda.getCliente();
     }
 }

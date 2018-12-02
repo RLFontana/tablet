@@ -1,8 +1,9 @@
 package br.com.easygo.cliente.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Garcom implements Comparable<Garcom>{
+public class Garcom implements Comparable<Garcom>, Serializable {
 
     private int id;
     private String matricula;
