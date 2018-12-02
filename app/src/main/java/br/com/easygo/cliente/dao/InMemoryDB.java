@@ -113,6 +113,7 @@ public class InMemoryDB {
         produtoDAO.add(new Produto(14, 15,"Sorvete", TipoProduto.SOBREMESA, "", 5d));
         produtoDAO.add(new Produto(15, 16,"Picolé", TipoProduto.SOBREMESA, "", 2.5d));
         produtoDAO.add(new Produto(16, 17,"Paçoquinha", TipoProduto.SOBREMESA, "", 0.3d));
+        produtoDAO.add(new Produto(17, 18,"Dose Bananinha", TipoProduto.DRINK, "", 5.0d));
     }
 
     private static void fillGarcons() {
