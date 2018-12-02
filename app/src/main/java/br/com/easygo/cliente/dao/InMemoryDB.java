@@ -62,7 +62,7 @@ public class InMemoryDB {
         clienteDAO.add(new Cliente(1, "Guthierry Gonzaga","99999-9901", "man_1" ));
         clienteDAO.add(new Cliente(2, "Vinícius Vieira","99999-9902", "man_2" ));
         clienteDAO.add(new Cliente(3, "Luiza Lourosa","99999-9903", "woman_2" ));
-        clienteDAO.add(new Cliente(4, "Denise Daciolo","99999-9904", "woman_3" ));
+        clienteDAO.add(new Cliente(4, "Mariza Marcelina","99999-9904", "woman_3" ));
         clienteDAO.add(new Cliente(5, "Shayana Soares","99999-9905", "woman_4" ));
         clienteDAO.add(new Cliente(6, "Enzo Esperandio","99999-9906", "man_3" ));
         clienteDAO.add(new Cliente(7, "Valentina Viegas","99999-9907" , "woman_5"));
@@ -70,6 +70,9 @@ public class InMemoryDB {
         clienteDAO.add(new Cliente(9, "Liliane Lavas","99999-9909", "woman_6" ));
         clienteDAO.add(new Cliente(10, "Jocival Júnior","99999-9910", "man_5" ));
         clienteDAO.add(new Cliente(11, "Aroldo Almeida","99999-9911", "man_6" ));
+        clienteDAO.add(new Cliente(12, "Denise Franzotti","99999-9912", "denise" ));
+        clienteDAO.add(new Cliente(13, "Daniel Oliveira","99999-9913", "daniel" ));
+        clienteDAO.add(new Cliente(14, "Eliana Caus","99999-9914", "eliana" ));
     }
 
     private static void fillComandas() {
@@ -86,6 +89,9 @@ public class InMemoryDB {
         comandaDAO.add(new Comanda(9, 10,  clienteDAO.get(9)));
         comandaDAO.add(new Comanda(10, 11,  clienteDAO.get(10)));
         comandaDAO.add(new Comanda(11, 12,  clienteDAO.get(11)));
+        comandaDAO.add(new Comanda(12, 13,  clienteDAO.get(12)));
+        comandaDAO.add(new Comanda(13, 14,  clienteDAO.get(13)));
+        comandaDAO.add(new Comanda(14, 15,  clienteDAO.get(14)));
     }
 
     private static void fillProdutos() {
@@ -107,6 +113,7 @@ public class InMemoryDB {
         produtoDAO.add(new Produto(14, 15,"Sorvete", TipoProduto.SOBREMESA, "", 5d));
         produtoDAO.add(new Produto(15, 16,"Picolé", TipoProduto.SOBREMESA, "", 2.5d));
         produtoDAO.add(new Produto(16, 17,"Paçoquinha", TipoProduto.SOBREMESA, "", 0.3d));
+        produtoDAO.add(new Produto(17, 18,"Dose Bananinha", TipoProduto.DRINK, "", 5.0d));
     }
 
     private static void fillGarcons() {
