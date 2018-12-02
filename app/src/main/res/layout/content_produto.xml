@@ -22,7 +22,32 @@
                 android:id="@+id/topInnerLayout"
                 android:layout_width="250dip"
                 android:layout_height="fill_parent"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:paddingBottom="4dp">
+
+                <LinearLayout
+                    android:id="@+id/btn_add_subpedido"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_add_circle"
+                        android:paddingEnd="4dp"
+                        android:tint="@color/asbesto"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/btn_novo_pedido"
+                        android:textColor="@color/asbesto"/>
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_subpedido"

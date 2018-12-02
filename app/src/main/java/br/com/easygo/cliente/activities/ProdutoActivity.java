@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProdutoActivity extends AppCompatActivity {
     List<SubPedidoAdapterObject> subPedidos = new LinkedList<>();
     SubPedidoAdapter subPedidoAdapter;
     private BundlePedidos prePedidos;
+    private LinearLayout btnNovoSubPedido;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,14 @@ public class ProdutoActivity extends AppCompatActivity {
         //ArrayList<Comanda> comandas = InMemoryDB.getComandaMesa(prePedidos.getMesaAtual());
         //List<Integer> clientesSelecionados = new LinkedList<>();
         //List<Cliente> clientesPedido = new LinkedList<>();
+
+        btnNovoSubPedido = findViewById(R.id.btn_add_subpedido);
+        btnNovoSubPedido.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         List<Produto> produtos = InMemoryDB.produtoDAO;
         List<ProdutoAdapterObject> listaProduto = new LinkedList<>();
@@ -59,7 +69,14 @@ public class ProdutoActivity extends AppCompatActivity {
         ProdutoDetalheAdapter.OnItemClickListener onClick = new ProdutoDetalheAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final Produto item) {
-                subPedidos.get(0).addProduto(item, 1);
+                //apenas o último é editável
+                subPedidos.get(subPedidos.size()-1).addProduto(item, 1);
+
+                if(subPedidos.get(subPedidos.size()-1).getProdutos().size() == 0){
+                    btnNovoSubPedido.setVisibility(View.GONE);
+                }else{
+                    btnNovoSubPedido.setVisibility(View.VISIBLE);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -73,7 +90,14 @@ public class ProdutoActivity extends AppCompatActivity {
         ItemSubPedidoAdapter.OnItemClickListener onRemoveClick = new ItemSubPedidoAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(final Produto item) {
-                subPedidos.get(0).removeProduto(item, 1);
+                //apenas o último é editável
+                subPedidos.get(subPedidos.size()-1).removeProduto(item, 1);
+
+                if(subPedidos.get(subPedidos.size()-1).getProdutos().size() == 0){
+                    btnNovoSubPedido.setVisibility(View.GONE);
+                }else{
+                    btnNovoSubPedido.setVisibility(View.VISIBLE);
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
