@@ -12,10 +12,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +38,12 @@ import br.com.easygo.cliente.model.MainCardTipo;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.Solicitacao;
+import br.com.easygo.cliente.webservice.GetObjectWS;
+import br.com.easygo.cliente.webservice.GetPadraoVolley;
+import br.com.easygo.cliente.webservice.PostObjectWS;
+import br.com.easygo.cliente.webservice.interfaces.IOnErrorListener;
+import br.com.easygo.cliente.webservice.interfaces.IOnPostExecuteListener;
+import br.com.easygo.cliente.webservice.interfaces.IOnPreExecuteListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         InMemoryDB.fillObjects();
 
         FloatingActionButton fabPedido = findViewById(R.id.fab_novo_pedido);
-
 
         BroadcastReceiver receiver = new BroadcastReceiver() {
             @Override
@@ -253,4 +263,91 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
     }
 
+    public View.OnClickListener btnGetOnClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetObjectWS getObj = new GetObjectWS(MainActivity.this, null);
+                getObj.setOnPreExecuteListener(getOnPreExecute());
+                getObj.setOnErrorListener(getOnError());
+                getObj.setOnPostExecuteListener(getOnPostExecute());
+                getObj.execute();
+            }
+        };
+    }
+
+    private IOnPostExecuteListener<String> getOnPostExecute() {
+        return new IOnPostExecuteListener<String>() {
+            @Override
+            public void onPostExecute(String result) {
+                Toast.makeText(MainActivity.this, result, Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+    private IOnErrorListener getOnError() {
+        return new IOnErrorListener() {
+            @Override
+            public void onError() {
+
+            }
+        };
+    }
+
+    private IOnPreExecuteListener getOnPreExecute() {
+        return new IOnPreExecuteListener() {
+            @Override
+            public void onPreExecute() {
+
+            }
+        };
+    }
+
+    public View.OnClickListener btnPostOnClick() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PostObjectWS postObj = new PostObjectWS(MainActivity.this, null);
+                postObj.setOnPreExecuteListener(postOnPreExecute());
+                postObj.setOnErrorListener(postOnError());
+                postObj.setOnPostExecuteListener(postOnPostExecute());
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.accumulate("property1", "asdFromSmartphone");
+                    obj.accumulate("property2", 12);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                postObj.post(obj);
+            }
+        };
+    }
+
+    private IOnPostExecuteListener<Object> postOnPostExecute() {
+        return new IOnPostExecuteListener<Object>() {
+            @Override
+            public void onPostExecute(Object result) {
+                Toast.makeText(MainActivity.this, result.toString(), Toast.LENGTH_LONG).show();
+            }
+        };
+    }
+
+    private IOnErrorListener postOnError() {
+        return new IOnErrorListener() {
+            @Override
+            public void onError() {
+
+            }
+        };
+    }
+
+    private IOnPreExecuteListener postOnPreExecute() {
+        return new IOnPreExecuteListener() {
+            @Override
+            public void onPreExecute() {
+
+            }
+        };
+    }
 }
