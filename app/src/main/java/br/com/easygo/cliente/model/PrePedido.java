@@ -54,4 +54,12 @@ public class PrePedido implements Serializable {
     public Comanda getComanda(int index){
         return this.comandas.get(index);
     }
+
+    public double getValorTotal() {
+        double valorTotal = 0d;
+        for(ItemPedido itemPedido : itensPedidos){
+            valorTotal += itemPedido.getQuantidade() * itemPedido.getProduto().getPrecoDouble();
+        }
+        return valorTotal;
+    }
 }

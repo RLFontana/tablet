@@ -29,10 +29,12 @@ import br.com.easygo.cliente.model.SituacaoItemPedido;
 
 public class ProdutoActivity extends AppCompatActivity {
 
-    List<SubPedidoAdapterObject> subPedidos = new LinkedList<>();
+
+    //List<SubPedidoAdapterObject> subPedidos = new LinkedList<>();
     SubPedidoAdapter subPedidoAdapter;
     private BundlePedidos prePedidos;
     private LinearLayout btnNovoSubPedido;
+    FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class ProdutoActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
         prePedidos = (BundlePedidos) intent.getSerializableExtra("prePedidos");
+        fab = findViewById(R.id.fab);
 
         //ArrayList<Comanda> comandas = InMemoryDB.getComandaMesa(prePedidos.getMesaAtual());
         //List<Integer> clientesSelecionados = new LinkedList<>();
@@ -82,6 +85,7 @@ public class ProdutoActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         subPedidoAdapter.notifyDataSetChanged();
+                        setFabVisibility();
                     }
                 });
             }
@@ -103,6 +107,7 @@ public class ProdutoActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         subPedidoAdapter.notifyDataSetChanged();
+                        setFabVisibility();
                     }
                 });
             }
@@ -114,17 +119,15 @@ public class ProdutoActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                //TODO: criar os pedidos
             }
         });
-        fab.setEnabled(false);
-        fab.setAlpha(0.1f);
 
+        setFabVisibility();
 
         subPedidos.add(new SubPedidoAdapterObject(prePedidos.getMesaAtual(), prePedidos.getComandasPedidoAtual()));
         RecyclerView recyclerViewSubpedido = findViewById(R.id.rv_subpedido);
@@ -138,6 +141,16 @@ public class ProdutoActivity extends AppCompatActivity {
         subPedidoAdapter = new SubPedidoAdapter(this, subPedidos, null, onRemoveClick);
         recyclerViewSubpedido.setAdapter(subPedidoAdapter);
 
+    }
+
+    private void setFabVisibility() {
+        if(subPedidos != null && !subPedidos.isEmpty()){
+            fab.setEnabled(true);
+            fab.setAlpha(1.0f);
+        } else {
+            fab.setEnabled(false);
+            fab.setAlpha(0.1f);
+        }
     }
 
 }
