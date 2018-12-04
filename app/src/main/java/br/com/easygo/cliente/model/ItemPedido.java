@@ -152,6 +152,10 @@ public class ItemPedido implements Comparable<ItemPedido>, Serializable {
     @Override
     public boolean equals(Object obj) {
         ItemPedido o = (ItemPedido) obj;
-        return this.id == o.id && this.quantidade == o.quantidade && this.situacao.equals(o.situacao) && this.precoUnitario.equals(o.precoUnitario) && ((this.dataEntrega == null && o.dataEntrega == null) || this.dataEntrega.equals(o.dataEntrega)) &&this.garcom.equals(o.garcom) && this.mesa.equals(o.mesa) && this.pedido.equals(o.pedido) && this.produto.equals(o.produto) && listaComandas.equals(listaComandas);
+        return this.precoUnitario.equals(o.precoUnitario) && ((this.garcom == null && o.garcom == null) ||this.garcom.equals(o.garcom)) && this.mesa.equals(o.mesa) && this.produto.equals(o.produto) && listaComandas.equals(listaComandas);
+    }
+
+    public double getValorTotal(){
+        return quantidade * precoUnitario.doubleValue();
     }
 }

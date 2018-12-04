@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.easygo.cliente.firebase.FireBaseData;
+import br.com.easygo.cliente.model.BundlePedidos;
 import br.com.easygo.cliente.model.Cliente;
 import br.com.easygo.cliente.model.Comanda;
 import br.com.easygo.cliente.model.Garcom;
 import br.com.easygo.cliente.model.ItemPedido;
 import br.com.easygo.cliente.model.Mesa;
 import br.com.easygo.cliente.model.Pedido;
+import br.com.easygo.cliente.model.PrePedido;
 import br.com.easygo.cliente.model.Produto;
 import br.com.easygo.cliente.model.SituacaoItemPedido;
 import br.com.easygo.cliente.model.SituacaoMesa;
@@ -236,4 +238,24 @@ public class InMemoryDB {
         return Constantes.TipoCozinha.valueOf(fireBaseData.getOrigin()).name();
     }
 
+    public static void createPedido(BundlePedidos prePedidos) {
+        int numeroPedido = pedidoDAO.size();
+        final Date date = new Date(System.currentTimeMillis());
+        Pedido pedido = new Pedido(numeroPedido -1, numeroPedido, prePedidos.getDataCriacao() == null ? date : prePedidos.getDataCriacao(), date, currentGarcom, new ArrayList<ItemPedido>());
+        for (PrePedido prePedido : prePedidos.getPrePedidos()){
+            for(ItemPedido itemPedido : prePedido.getItensPedidos()){
+                int indexItemPedido = itemPedidoDAO.size();
+                itemPedido.setId(indexItemPedido -1);
+                itemPedido.setListaComandas(prePedido.getComandas());
+                itemPedido.setPedido(pedido);
+                for(Comanda comanda : prePedido.getComandas()){
+                    comanda.getListaItemPedido().add(itemPedido);
+                }
+                itemPedidoDAO.add(itemPedido);
+                pedido.getListaItemPedido().add(itemPedido);
+                currentGarcom.getListaItensPedidos().add(itemPedido);
+            }
+        }
+        pedidoDAO.add(pedido);
+    }
 }

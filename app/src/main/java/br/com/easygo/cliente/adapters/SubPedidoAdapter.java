@@ -1,27 +1,22 @@
 package br.com.easygo.cliente.adapters;
 
 import android.content.Context;
-import android.os.Build;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import java.util.List;
-
 import br.com.easygo.cliente.R;
-import br.com.easygo.cliente.adapters.objects.MesaAdapterObject;
-import br.com.easygo.cliente.adapters.objects.SubPedidoAdapterObject;
+import br.com.easygo.cliente.model.BundlePedidos;
+import br.com.easygo.cliente.model.PrePedido;
 
 public class SubPedidoAdapter extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(SubPedidoAdapterObject item);
+        void onItemClick(PrePedido item);
     }
 
     private final OnItemClickListener listener;
@@ -30,9 +25,9 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
     private static final int EMPTY_VIEW = 10;
 
     private final Context context;
-    private final List<SubPedidoAdapterObject> pedidos;
+    BundlePedidos pedidos;
 
-    public SubPedidoAdapter(Context context, List<SubPedidoAdapterObject> pedidos,
+    public SubPedidoAdapter(Context context, BundlePedidos pedidos,
                             OnItemClickListener onClick, ItemSubPedidoAdapter.OnItemClickListener onClickSubItem) {
         this.context = context;
         this.pedidos = pedidos;
@@ -53,7 +48,7 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SubPedidoViewHolder) {
             final SubPedidoViewHolder viewHolder = (SubPedidoViewHolder) holder;
-            final SubPedidoAdapterObject item = pedidos.get(position);
+            final PrePedido item = pedidos.getPrePedido(position);
 
             viewHolder.mesaName.setText("Mesa " + item.getMesa().getNumero());
             viewHolder.valorTotal.setText("R$ " + String.format("%.2f", item.getValorTotal()));
@@ -68,14 +63,15 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
             ClienteViewAdapter adapter = new ClienteViewAdapter(context, item.getComandas());
             viewHolder.clienteLista.setAdapter(adapter);
 
-            if(item.getProdutos().size() > 0){
-                viewHolder.subpedidoLista.setVisibility(View.VISIBLE);
-            }else{
+            if(item.getItensPedidos().isEmpty()){
                 viewHolder.subpedidoLista.setVisibility(View.GONE);
+            }else{
+                viewHolder.subpedidoLista.setVisibility(View.VISIBLE);
+
             }
 
             viewHolder.subpedidoLista.setLayoutManager(new LinearLayoutManager(context));
-            ItemSubPedidoAdapter itemsPedido = new ItemSubPedidoAdapter(context, item.getProdutos(), listenerSubItem);
+            ItemSubPedidoAdapter itemsPedido = new ItemSubPedidoAdapter(context, item, listenerSubItem);
             viewHolder.subpedidoLista.setAdapter(itemsPedido);
 
             if(listener != null){
@@ -91,27 +87,25 @@ public class SubPedidoAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return pedidos != null && pedidos.size() > 0 ? pedidos.size() : 1;
+        return pedidos.getPrePedidos() != null && pedidos.getPrePedidos().size() > 0 ? pedidos.getPrePedidos().size() : 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (pedidos == null || pedidos.size() == 0) {
+        if (pedidos.getPrePedidos() == null || pedidos.getPrePedidos().size() == 0) {
             return EMPTY_VIEW;
         }
         return super.getItemViewType(position);
     }
 
     public void remove(int position) {
-        SubPedidoAdapterObject item = pedidos.get(position);
-        if (pedidos.contains(item)) {
-            pedidos.remove(position);
-            notifyItemRemoved(position);
-        }
+        pedidos.getPrePedidos().remove(position);
+        notifyItemRemoved(position);
+
     }
 
-    public SubPedidoAdapterObject getItemByPosition(int position){
-        return pedidos == null ? null : pedidos.get(position);
+    public PrePedido getItemByPosition(int position){
+        return pedidos.getPrePedidos() == null || pedidos.getPrePedidos().isEmpty() ? null : pedidos.getPrePedido(position);
     }
 
     static class SubPedidoViewHolder extends RecyclerView.ViewHolder {

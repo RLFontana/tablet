@@ -1,7 +1,10 @@
 package br.com.easygo.cliente.model;
 
+import android.support.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class BundlePedidos implements Serializable {
@@ -9,9 +12,15 @@ public class BundlePedidos implements Serializable {
     private List<PrePedido> prePedidos;
     private Garcom garcom;
     private boolean reverse;
+    private Date dataCriacao;
 
-    public BundlePedidos(Garcom garcom) {
+    public BundlePedidos(Garcom garcom){
+        this(garcom, null);
+    }
+
+    public BundlePedidos(Garcom garcom, @Nullable Date dataCriacao) {
         this.garcom = garcom;
+        this.dataCriacao = dataCriacao;
         this.prePedidos = new ArrayList<>();
         reverse = false;
     }
@@ -52,12 +61,20 @@ public class BundlePedidos implements Serializable {
         this.reverse = false;
     }
 
+    public Date getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(Date dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
     public Mesa getMesaAtual(){
-        return prePedidos.get(prePedidos.size() -1).getMesa();
+        return prePedidos.get(getIndexAtual()).getMesa();
     }
 
     public void alteraMesaAtual(Mesa mesa){
-        prePedidos.get(prePedidos.size() - 1).setMesa(mesa);
+        prePedidos.get(getIndexAtual()).setMesa(mesa);
     }
 
     public boolean isNew(){
@@ -66,5 +83,29 @@ public class BundlePedidos implements Serializable {
 
     public List<Comanda> getComandasPedidoAtual(){
         return prePedidos.get(prePedidos.size() -1).getComandas();
+    }
+
+    public PrePedido getPrePedidoAtual(){
+        return prePedidos.get(getIndexAtual());
+    }
+
+    private int getIndexAtual(){
+        return prePedidos.size() -1;
+    }
+
+    public void addNewPrepedido(){
+        PrePedido newPrePedido = new PrePedido();
+        newPrePedido.setMesa(getMesaAtual());
+        prePedidos.add(newPrePedido);
+    }
+
+    public void removeLastPrePedido(){
+        if(prePedidos != null && !prePedidos.isEmpty()){
+            prePedidos.remove(getIndexAtual());
+        }
+    }
+
+    public boolean isFilled(){
+        return !getPrePedidoAtual().getItensPedidos().isEmpty();
     }
 }

@@ -1,7 +1,6 @@
 package br.com.easygo.cliente.adapters;
 
 import android.content.Context;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import java.util.List;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.objects.ProdutoAdapterObject;
-import br.com.easygo.cliente.model.Produto;
 
 public class ProdutoAdapter  extends RecyclerView.Adapter{
 
@@ -54,7 +52,7 @@ public class ProdutoAdapter  extends RecyclerView.Adapter{
             ProdutoDetalheAdapter adapter = new ProdutoDetalheAdapter(context, item.getProdutos(), listener);
             viewHolder.produtoLista.setAdapter(adapter);
 
-            if(item.isExpaded()){
+            if(item.isExpanded()){
                 viewHolder.produtoLista.setVisibility(View.VISIBLE);
             }else{
                 viewHolder.produtoLista.setVisibility(View.GONE);
@@ -66,10 +64,10 @@ public class ProdutoAdapter  extends RecyclerView.Adapter{
                     for(int i=0;i<produtos.size();i++){
                         ProdutoAdapterObject prd = produtos.get(i);
                         if(item == prd){
-                            prd.setExpaded(!item.isExpaded());
+                            prd.setExpanded(!item.isExpanded());
                             notifyItemChanged(i);
-                        }else if(prd.isExpaded()){
-                            prd.setExpaded(false);
+                        }else if(prd.isExpanded()){
+                            prd.setExpanded(false);
                             notifyItemChanged(i);
                         }
                     }

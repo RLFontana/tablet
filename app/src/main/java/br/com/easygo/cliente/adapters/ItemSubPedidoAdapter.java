@@ -8,16 +8,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
-
 import br.com.easygo.cliente.R;
-import br.com.easygo.cliente.adapters.objects.SubPedidoAdapterObject;
+import br.com.easygo.cliente.model.ItemPedido;
+import br.com.easygo.cliente.model.PrePedido;
 import br.com.easygo.cliente.model.Produto;
 
 public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
 
     public interface OnItemClickListener {
-        void onItemClick(Produto itemPos);
+        void onItemClick(Produto produto);
     }
 
     private final OnItemClickListener listener;
@@ -25,12 +24,12 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
     private static final int EMPTY_VIEW = 10;
 
     private final Context context;
-    private final List<SubPedidoAdapterObject.SubPedidoProduto> produtos;
+    private final PrePedido prePedido;
 
-    public ItemSubPedidoAdapter(Context context, List<SubPedidoAdapterObject.SubPedidoProduto> produtos,
+    public ItemSubPedidoAdapter(Context context, PrePedido prePedido,
                                 OnItemClickListener onClick) {
         this.context = context;
-        this.produtos = produtos;
+        this.prePedido = prePedido;
         this.listener = onClick;
     }
 
@@ -47,7 +46,7 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof SubPedidoProdutoViewHolder) {
             final SubPedidoProdutoViewHolder viewHolder = (SubPedidoProdutoViewHolder) holder;
-            final SubPedidoAdapterObject.SubPedidoProduto item = produtos.get(position);
+            final ItemPedido item = prePedido.getItemPedido(position);
 
             viewHolder.produtoName.setText(item.getProduto().getNome());
             viewHolder.produtoQuantidade.setText(String.valueOf(item.getQuantidade()));
@@ -65,27 +64,23 @@ public class ItemSubPedidoAdapter extends RecyclerView.Adapter{
 
     @Override
     public int getItemCount() {
-        return produtos != null && produtos.size() > 0 ? produtos.size() : 1;
+        return prePedido != null && prePedido.getItensPedidos().size() > 0 ? prePedido.getItensPedidos().size() : 1;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (produtos == null || produtos.size() == 0) {
+        if (prePedido.getItensPedidos() == null || prePedido.getItensPedidos().size() == 0) {
             return EMPTY_VIEW;
         }
         return super.getItemViewType(position);
     }
 
     public void remove(int position) {
-        SubPedidoAdapterObject.SubPedidoProduto item = produtos.get(position);
-        if (produtos.contains(item)) {
-            produtos.remove(position);
-            notifyItemRemoved(position);
-        }
+        prePedido.removeItemPedido(prePedido.getItemPedido(position).getProduto());
     }
 
-    public SubPedidoAdapterObject.SubPedidoProduto getItemByPosition(int position){
-        return produtos == null ? null : produtos.get(position);
+    public Produto getItemByPosition(int position){
+        return prePedido.getItensPedidos() == null || prePedido.getItensPedidos().isEmpty() ? null : prePedido.getItemPedido(position).getProduto();
     }
 
 static class SubPedidoProdutoViewHolder extends RecyclerView.ViewHolder {

@@ -2,17 +2,14 @@ package br.com.easygo.cliente.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Date;
 
 import br.com.easygo.cliente.R;
 import br.com.easygo.cliente.adapters.MesaAdapter;
@@ -36,7 +33,7 @@ public class MesaActivity extends AppCompatActivity {
         Intent intent = getIntent();
         BundlePedidos pedidos = (BundlePedidos) intent.getSerializableExtra("prePedidos");
         if (prePedidos == null){
-            prePedidos = new BundlePedidos(InMemoryDB.currentGarcom);
+            prePedidos = new BundlePedidos(InMemoryDB.currentGarcom, new Date(System.currentTimeMillis()));
         }
         if (pedidos != null){
             prePedidos = pedidos;

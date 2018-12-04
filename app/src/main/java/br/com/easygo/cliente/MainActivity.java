@@ -90,8 +90,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fillList();
-
         RecyclerView recyclerView = findViewById(R.id.rcvw_cards);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2, LinearLayoutManager.VERTICAL, false));
         adapter = new MainAdapter(this, itemPedidos);
@@ -103,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         refreshDataSet();
+        fillList();
     }
 
     public void refreshDataSet(){

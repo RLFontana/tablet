@@ -32,6 +32,7 @@ public class Comanda implements Comparable<Comanda>, Serializable {
         this.id = id;
         this.dataAbertura = Calendar.getInstance().getTime();
         this.cliente = cliente;
+        this.listaItemPedido = new ArrayList<>();
     }
 
     public Comanda(int id, Cliente cliente){

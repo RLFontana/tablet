@@ -8,7 +8,7 @@ public class ProdutoAdapterObject {
 
     private String tipo;
     private List<Produto> produtos;
-    private boolean expaded;
+    private boolean expanded;
 
     public ProdutoAdapterObject(String tipo, List<Produto> produtos) {
         this.tipo = tipo;
@@ -31,11 +31,11 @@ public class ProdutoAdapterObject {
         this.produtos = produtos;
     }
 
-    public boolean isExpaded() {
-        return expaded;
+    public boolean isExpanded() {
+        return expanded;
     }
 
-    public void setExpaded(boolean expaded) {
-        this.expaded = expaded;
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 }
