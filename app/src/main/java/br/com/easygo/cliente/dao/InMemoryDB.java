@@ -254,6 +254,8 @@ public class InMemoryDB {
                 itemPedidoDAO.add(itemPedido);
                 pedido.getListaItemPedido().add(itemPedido);
                 currentGarcom.getListaItensPedidos().add(itemPedido);
+                itemPedido.getMesa().getItensPedidos().add(itemPedido);
+                itemPedido.getPedido().getListaItemPedido().add(itemPedido);
             }
         }
         pedidoDAO.add(pedido);
